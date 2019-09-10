@@ -1,0 +1,261 @@
+;----------------------------------------------------------------
+; constants
+;----------------------------------------------------------------
+
+PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
+MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
+
+STATETITLE	= $00
+STATEPLAYING	= $01
+STATEGAMEOVER	= $02
+
+;----------------------------------------------------------------
+; variables
+;----------------------------------------------------------------
+oam 	  	= $0200 ;shadow oam
+draw_flags 	= #%00000000
+	;;draw_flag bits:
+	;;00000000
+	;;|||||||+-needma
+	;;||||||+--needdraw
+	;;|||||+---needppureg
+	;;||||+----soft2000
+	;;|||+-----soft2001
+	
+   .enum $0000
+
+   ;NOTE: declare variables using the DSB and DSW directives, like this:
+
+   ;MyVariable0 .dsb 1
+   ;MyVariable1 .dsb 3
+
+gamestate  	.dsb 1
+soft2000  	.dsb 1
+soft2001  	.dsb 1
+sleeping  	.dsb 1
+needma	  	.dsb 1
+needdraw  	.dsb 1
+needppureg  	.dsb 1	
+buttons1  	.dsb 1
+buttons2  	.dsb 1
+bufflength  	.dsb 1	
+
+   .ende
+
+   ;NOTE: you can also split the variable declarations into individual pages, like this:
+
+   ;.enum $0100
+   ;.ende
+
+   ;.enum $0200
+   ;.ende
+
+;----------------------------------------------------------------
+; iNES header
+;----------------------------------------------------------------
+
+   .db "NES", $1a ;identification of the iNES header
+   .db PRG_COUNT ;number of 16KB PRG-ROM pages
+   .db $01 ;number of 8KB CHR-ROM pages
+   .db $00|MIRRORING ;mapper 0 and mirroring
+   .dsb 9, $00 ;clear the remaining bytes
+
+;----------------------------------------------------------------
+; program bank(s)
+;----------------------------------------------------------------
+
+	.base $10000-(PRG_COUNT*$4000)
+
+	.include "reset_load.asm"
+	.include "macros.asm"
+
+GameEngineRunning:
+	
+	
+	;; LDA draw_flags
+	;; AND #%00000100
+	;; CMP #$00
+	;; BEQ Forever
+	;; LDA #%00001010
+	;; STA $2001
+	LDA #%10010000
+	STA $2000
+	
+Forever:
+	JMP Forever
+	
+WaitFrame:
+	;; LDA #%00000000
+	BIT $2002
+	BPL WaitFrame
+	RTS
+;; 	inc sleeping
+;; loop:
+;; 	lda sleeping
+;; 	bne loop
+;; 	rts
+
+   ;--------------------------------------
+   ; DoFrame - same idea as WaitFrame, but also does some other stuff
+   ;   that the game logic will want done every frame.  Things that
+   ;   shouldn't be put in NMI
+
+DoFrame:
+	;; bit flags instead of variables?
+	LDA #%00000100 ;NeedPpuReg
+	STA draw_flags
+	;; lda #1
+	;; sta needdraw
+	;; sta needoam
+	;; sta needppureg
+	jsr WaitFrame
+	jsr UpdateJoypadData
+	RTS
+;---------------------------------------
+; NMI
+;---------------------------------------
+NMI:
+
+	PushAll
+	;; LDA draw_flags
+	;; AND #%00000001
+	;; CMP #$00
+	;; BEQ NeedDraw
+	;; LDA #$00
+	;; STA $2003
+	;; LDA #>oam
+	;; STA $4014
+	
+	;; LDA needma
+	;; BEQ NeedDraw
+	;; LDA #$00
+	;; STA $2003
+	;; LDA #>oam
+	;; STA $4014
+
+NeedDraw:
+	;; LDA draw_flags
+	;; AND #%00000010
+	;; CMP #$00
+	;; BEQ NeedPpuReg
+	;; BIT $2002
+	;; JSR DoDrawing
+	
+	;; LDA needdraw
+	;; BNE NeedPpuReg
+	;; BIT $2002
+	;; JSR DoDrawing
+	;; DEC needdraw
+NeedPpuReg:
+	LDA draw_flags
+	AND #%00000100
+	CMP #$00
+	BEQ PpuScroll
+	LDA draw_flags
+	EOR #%00000100
+	STA draw_flags
+	LDA #%00001010
+	STA $2001
+	;; LDA #%10010000
+	;; STA $2000
+
+	;; PullAll
+	;; RTI
+	
+	;; LDA needppureg
+	;; BNE Next
+	;; LDA soft2001
+	;; STA $2001
+	;; LDA soft2000
+	;; STA $2000
+PpuScroll:
+	BIT $2002
+	LDA #$00
+	STA $2005		;ppu scroll - turn off
+	STA $2005
+
+	;; Optional
+	;; 7)run music code
+	;; 8)wait for sprite 0 hit and change the VRAM address
+	;; Optional
+
+	;; LDA #0 ;reset sleeping to 0 so WaitFrame exits
+	;; STA sleeping
+
+	;; LDA #$00
+	;; STA draw_flags
+
+	;; 9)pull registers/status flags off stack
+	PullAll
+
+	RTI
+
+
+DoDrawing:
+	RTS ;not drawing anything right now... have to fix code below
+	
+;; 	LDX #$00
+;; 	LDY #$00
+;; 	LDA testbuffer
+;; 	TAY
+;; 	DEY
+;; 	INC
+;; OuterLoop:	
+;; 	LDA testbuffer, X
+;; 	INX
+	
+;; 	DEY
+;; 	CPY #$00
+;; 	BEQ DoDrawingDone	
+;; 	LDA testbuffer, X
+;; 	STA $2006
+;; 	INX
+;; 	LDA testbuffer, X
+;; 	STA $2006
+;; 	INX
+;; 	;X should be at #$03 right now (in bytes to load)
+;; BuffLoop:	
+;; 	LDA testbuffer, X
+;; 	STA $2007
+;; 	INX
+;; 	CPX bufflength
+;; 	BNE BuffLoop
+;; DoDrawingDone:
+;; 	RTS
+UpdateJoypadData:
+	LDA #$01
+	STA $4016
+	LDA #$00
+	STA $4016
+	LDX #$08
+ReadController1Loop:
+	LDA $4016
+	LSR A            ; bit0 -> Carry
+	ROL buttons1     ; bit0 <- Carry
+	DEX
+	BNE ReadController1Loop
+	RTS
+
+testbuffer:
+	.db $07,$20,$00,$00,$01,02,03
+
+spritebuffer:
+	.db $??,$80,$02,$00,$01,$02,$01,
+
+	.include "colorbuffers.asm"
+
+;----------------------------------------------------------------
+; interrupt vectors
+;----------------------------------------------------------------
+
+   .org $fffa
+
+   .dw NMI
+   .dw RESET
+   .dw 0
+
+;----------------------------------------------------------------
+; CHR-ROM bank
+;----------------------------------------------------------------
+
+   .incbin "gamer.chr"
