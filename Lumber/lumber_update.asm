@@ -6,13 +6,17 @@ PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 STATETITLE	= $00
-STATEPLAYING	= $01
-STATEGAMEOVER	= $02
+STATEPLAYING	= $05
+STATEGAMEOVER	= $06
+RIGHTWALL	= $F9  ; when ball reaches one of these, do something
+TOPWALL     	= $20
+BOTTOMWALL  	= $B7
+LEFTWALL    	= $01	
 
 ;----------------------------------------------------------------
 ; variables
 ;----------------------------------------------------------------
-oam 	  	= $0200 ;shadow oam
+	;; oam 	  	= $0200 ;shadow oam
 draw_flags 	= #%00000000
 	;;draw_flag bits:
 	;;00000000
@@ -27,32 +31,29 @@ z_Regs 		= $60
 z_HL		= z_Regs
 z_H		= z_Regs
 z_L		= z_Regs+1
-z_DE		= z_Regs+2
-z_D		= z_Regs+2
-z_E		= z_Regs+3
-shadow_oam	= $0200	
+shadow_oam	= $0200
+FrameCounter1	= $04
+FrameCounter2	= $03
 	
    .enum $0000
 
    ;NOTE: declare variables using the DSB and DSW directives, like this:
 
    ;MyVariable0 .dsb 1
-   ;MyVariable1 .dsb 3
 
 gamestate  	.dsb 1	
 buttons1  	.dsb 1
 buttons2  	.dsb 1
-temp		.dsb 1	
+levels		.dsb 1
+	;;draw_flag bits:
+	;;00000000
+	;;|||||||+-level 1
+	;;||||||+--level 2
+	;;|||||+---level 3
+	;;||||+----level 4
+	;;|||+-----level 5
 
    .ende
-
-   ;NOTE: you can also split the variable declarations into individual pages, like this:
-
-   ;.enum $0100
-   ;.ende
-
-   ;.enum $0200
-   ;.ende
 
 ;----------------------------------------------------------------
 ; iNES header
@@ -66,7 +67,7 @@ temp		.dsb 1
 
 ;----------------------------------------------------------------
 ; program bank(s)
-	;----------------------------------------------------------------
+;----------------------------------------------------------------
 
 	.base $10000-(PRG_COUNT*$4000)
 
@@ -74,68 +75,54 @@ temp		.dsb 1
 	.include "macros.asm"
 
 GameEngineRunning:
+	LDA #$FF
+	STA FrameCounter1
+	STA FrameCounter2
+	TAX
 
-	LDA #%00000010 ;draw sprites
+	LDA #%00000001
+	STA levels
 	
+	LDA #%00000110 ;draw sprites
+	STA draw_flags
 Forever:
+	.include "controls.asm"
+	;; logic for figuring out what level we are on? this is defined
+	;; in multiple locations... not efficient.
+	.include "level_animations.asm"
+
 	JMP Forever
 	
 WaitFrame:
 	;; LDA #%00000000
-	BIT $2002
-	BPL WaitFrame
-	RTS
+	;; BIT $2002
+	;; BPL WaitFrame
+	;; RTS
 ;; 	inc sleeping
 ;; loop:
 ;; 	lda sleeping
 ;; 	bne loop
 ;; 	rts
 
-   ;--------------------------------------
-   ; DoFrame - same idea as WaitFrame, but also does some other stuff
-   ;   that the game logic will want done every frame.  Things that
-   ;   shouldn't be put in NMI
-
 DoFrame:
 	;; bit flags instead of variables?
-	LDA #%00000100 ;NeedPpuReg
-	STA draw_flags
-	;; lda #1
-	;; sta needdraw
-	;; sta needoam
-	;; sta needppureg
-	jsr WaitFrame
-	jsr UpdateJoypadData
-	RTS
+	;; LDA #%00000110 ;NeedPpuReg
+	;; STA draw_flags
+	;; jsr WaitFrame
+	;; jsr UpdateJoypadData
+	;; RTS
 ;---------------------------------------
 ; NMI
 ;---------------------------------------
 NMI:
 
 	PushAll
-
-	
-	;; LDA draw_flags
-	;; AND #%00000001
-	;; CMP #$00
-	;; BEQ NeedDraw
-	;; LDA #$00
-	;; STA $2003
-	;; LDA #>oam
-	;; STA $4014
-	
-	;; LDA needma
-	;; BEQ NeedDraw
-	;; LDA #$00
-	;; STA $2003
-	;; LDA #>oam
-	;; STA $4014
-
-NeedDraw:
 	LDA #$00
 	STA $2003
-	LDA shadow_oam ;$0200
-	STA $4014
+	LDA #$02
+	STA $4014	
+
+NeedDraw:
 	LDA draw_flags
 	AND #%00000010
 	CMP #$00
@@ -169,76 +156,23 @@ PpuScroll:
 	;; LDA #0 ;reset sleeping to 0 so WaitFrame exits
 	;; STA sleeping
 
-	;; LDA #$00
-	;; STA draw_flags
+	JSR UpdateController
 
-	;; 9)pull registers/status flags off stack
+	LDA #$00
+	STA draw_flags
 	PullAll
 
 	RTI
 
 
 DoDrawing:
-	;;  why does this only show up at 00 on the screen?
-	LDA $80
-	STA $0200
-	LDA $01
-	STA $0201
-	LDA $00
-	STA $0202
-	LDA $80
-	STA $0203
 
+	.include "levels.asm"
+
+DoDrawingDone:	
 	RTS
-
 	
-;; 	LDY #$00
-;; 	LDX #$00
-;; 	LDA spritebuffer
-;; 	STA z_H
-;; 	DEC z_H
-;; Looper:
-;; 	INX
-;; 	LDA spritebuffer, x
-;; 	STA $0200, y
-;; 	INY
-;; 	DEC z_H
-;; 	LDA z_H
-;; 	BNE Looper
-	
-;; 	RTS
-	
-;; 	LDX #$00
-;; 	LDY #$00
-;; 	LDA spritebuffer
-;; 	TAX
-;; 	DEY
-;; OuterLoop:	
-;; 	LDA testbuffer, Y
-;; 	CPX spritebuffer
-;; 	BNE OuterLoop ;if not 0 go to outerloop
-	
-;; 	DEY
-;; 	CPY #$00
-;; 	BEQ DoDrawingDone	
-;; 	LDA testbuffer, Y
-;; 	STA $2006
-;; 	INX
-;; 	LDA testbuffer, Y
-;; 	STA $2006
-;; 	INX
-;; 	;X should be at #$03 right now (in bytes to load)
-;; BuffLoop:	
-;; 	LDA testbuffer, X
-;; 	STA $2007
-;; 	INX
-;; 	CPX bufflength
-;; 	BNE BuffLoop
-;; DoDrawingDone:
-;; 	LDA #$00
-;; 	STA draw_flags ;reset draw_flags to 0.
-	;; RTS
-UpdateJoypadData:
+UpdateController:
 	LDA #$01
 	STA $4016
 	LDA #$00
@@ -252,13 +186,8 @@ ReadController1Loop:
 	BNE ReadController1Loop
 	RTS
 
-testbuffer:
-	.db $07,$20,$00,$00,$01,02,03
-
-spritebuffer:
-	.db $05,$80,$01,$00,$80
-
 	.include "colorbuffers.asm"
+	.include "levelbuffers.asm"
 
 ;----------------------------------------------------------------
 ; interrupt vectors

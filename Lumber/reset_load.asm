@@ -37,6 +37,15 @@ vblankwait2:
 	BIT $2002
 	BPL vblankwait2
 
+;; LoadSprites:
+;; 	LDX #$00
+;; LoadSpritesLoop:
+;; 	LDA sprites, x
+;; 	STA $0200, x
+;; 	INX
+;; 	CPX #$08
+;; 	BNE LoadSpritesLoop
+
 LoadBackground:
 	LDA $2002             ; read PPU status to reset the high/low latch
 	LDA #$20
@@ -44,13 +53,65 @@ LoadBackground:
 	LDA #$00
 	STA $2006             ; write the low byte of $2000 address
 	LDX #$00              ; start out at 0
-LoadBackgroundLoop1:
-	;; LDA background, x     
-	TXA
-	STA $2007             
-	INX                   
-	CPX #$00              
+;; LoadBackgroundLoop1:
+;; 	;;;;; LDA background, x     
+;; 	TXA
+;; 	STA $2007             
+;; 	INX                   
+;; 	CPX #$00              
+;; 	BNE LoadBackgroundLoop1
+
+LoadBackgroundLoop1:		;single grass color
+	LDA #$01
+	STA $2007
+	INX
+	CPX #$00
 	BNE LoadBackgroundLoop1
+	
+LoadBackground2:
+	LDA $2002
+	LDA #$21
+	STA $2006             
+	LDA #$00
+	STA $2006
+	
+	LDX #$00              
+LoadBackgroundLoop2:		;single grass color
+	LDA #$01
+	STA $2007
+	INX
+	CPX #$00
+	BNE LoadBackgroundLoop2
+	
+LoadBackground3:
+	LDA $2002
+	LDA #$22
+	STA $2006             
+	LDA #$00
+	STA $2006
+	
+	LDX #$00              
+LoadBackgroundLoop3:		;single grass color
+	LDA #$01
+	STA $2007
+	INX
+	CPX #$00
+	BNE LoadBackgroundLoop3
+	
+LoadBackground4:
+	LDA $2002
+	LDA #$23
+	STA $2006             
+	LDA #$00
+	STA $2006
+	
+	LDX #$00              
+LoadBackgroundLoop4:		;single grass color
+	LDA #$01
+	STA $2007
+	INX
+	CPX #$00
+	BNE LoadBackgroundLoop4
 
 LoadPalettes:
 	LDA $2002             ; read PPU status to reset the high/low latch
@@ -77,8 +138,8 @@ LoadAttributeLoop:
 	LDA attribute, x      
 	STA $2007             
 	INX                   
-	CPX #$28              
+	CPX #$40              
 	BNE LoadAttributeLoop
 
 
-	JSR DoFrame
+	;; JSR DoFrame

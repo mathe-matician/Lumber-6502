@@ -7,48 +7,48 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 STATETITLE	= $00
 STATEPLAYING	= $01
-STATEGAMEOVER	= $02
+STATEGAMEOVER	= $02	
 
 ;----------------------------------------------------------------
 ; variables
 ;----------------------------------------------------------------
-oam 	  	= $0200 ;shadow oam
+	;; oam 	  	= $0200 ;shadow oam
 draw_flags 	= #%00000000
 	;;draw_flag bits:
 	;;00000000
 	;;|||||||+-needma
 	;;||||||+--needdraw
 	;;|||||+---needppureg
-	;;||||+----soft2000
-	;;|||+-----soft2001
+	;;||||+----2000
+	;;|||+-----2001
+
+	;; fake registers in zero page
+z_Regs 		= $60
+z_HL		= z_Regs
+z_H		= z_Regs
+z_L		= z_Regs+1
+shadow_oam	= $0200
+FrameCounter	= $04	
 	
    .enum $0000
 
    ;NOTE: declare variables using the DSB and DSW directives, like this:
 
    ;MyVariable0 .dsb 1
-   ;MyVariable1 .dsb 3
 
-gamestate  	.dsb 1
-soft2000  	.dsb 1
-soft2001  	.dsb 1
-sleeping  	.dsb 1
-needma	  	.dsb 1
-needdraw  	.dsb 1
-needppureg  	.dsb 1	
+gamestate  	.dsb 1	
 buttons1  	.dsb 1
 buttons2  	.dsb 1
-bufflength  	.dsb 1	
+levels		.dsb 1
+	;;draw_flag bits:
+	;;00000000
+	;;|||||||+-level 1
+	;;||||||+--level 2
+	;;|||||+---level 3
+	;;||||+----level 4
+	;;|||+-----level 5
 
    .ende
-
-   ;NOTE: you can also split the variable declarations into individual pages, like this:
-
-   ;.enum $0100
-   ;.ende
-
-   ;.enum $0200
-   ;.ende
 
 ;----------------------------------------------------------------
 ; iNES header
@@ -70,45 +70,38 @@ bufflength  	.dsb 1
 	.include "macros.asm"
 
 GameEngineRunning:
-	
-	
-	;; LDA draw_flags
-	;; AND #%00000100
-	;; CMP #$00
-	;; BEQ Forever
-	;; LDA #%00001010
-	;; STA $2001
-	LDA #%10010000
-	STA $2000
-	
+	LDA #$FF
+	STA FrameCounter
+	TAX
+	LDA #%00000110 ;draw sprites
+	STA draw_flags
 Forever:
+
+	;; logic for figuring out what level we are on? this is defined
+	;; in multiple locations... not efficient.
+	LDA #%00000001
+	STA levels
+	
+	FIRE_Level_1
+
 	JMP Forever
 	
 WaitFrame:
 	;; LDA #%00000000
-	BIT $2002
-	BPL WaitFrame
-	RTS
+	;; BIT $2002
+	;; BPL WaitFrame
+	;; RTS
 ;; 	inc sleeping
 ;; loop:
 ;; 	lda sleeping
 ;; 	bne loop
 ;; 	rts
 
-   ;--------------------------------------
-   ; DoFrame - same idea as WaitFrame, but also does some other stuff
-   ;   that the game logic will want done every frame.  Things that
-   ;   shouldn't be put in NMI
-
 DoFrame:
 	;; bit flags instead of variables?
-	LDA #%00000100 ;NeedPpuReg
-	STA draw_flags
-	;; lda #1
-	;; sta needdraw
-	;; sta needoam
-	;; sta needppureg
-	jsr WaitFrame
+	;; LDA #%00000110 ;NeedPpuReg
+	;; STA draw_flags
+	;; jsr WaitFrame
 	jsr UpdateJoypadData
 	RTS
 ;---------------------------------------
@@ -117,35 +110,18 @@ DoFrame:
 NMI:
 
 	PushAll
-	;; LDA draw_flags
-	;; AND #%00000001
-	;; CMP #$00
-	;; BEQ NeedDraw
-	;; LDA #$00
-	;; STA $2003
-	;; LDA #>oam
-	;; STA $4014
-	
-	;; LDA needma
-	;; BEQ NeedDraw
-	;; LDA #$00
-	;; STA $2003
-	;; LDA #>oam
-	;; STA $4014
+	LDA #$00
+	STA $2003
+	LDA #$02
+	STA $4014	
 
 NeedDraw:
-	;; LDA draw_flags
-	;; AND #%00000010
-	;; CMP #$00
-	;; BEQ NeedPpuReg
-	;; BIT $2002
-	;; JSR DoDrawing
-	
-	;; LDA needdraw
-	;; BNE NeedPpuReg
-	;; BIT $2002
-	;; JSR DoDrawing
-	;; DEC needdraw
+	LDA draw_flags
+	AND #%00000010
+	CMP #$00
+	BEQ NeedPpuReg
+	BIT $2002
+	JSR DoDrawing
 NeedPpuReg:
 	LDA draw_flags
 	AND #%00000100
@@ -154,20 +130,11 @@ NeedPpuReg:
 	LDA draw_flags
 	EOR #%00000100
 	STA draw_flags
-	LDA #%00001010
+	LDA #%00011110
 	STA $2001
-	;; LDA #%10010000
-	;; STA $2000
 
-	;; PullAll
-	;; RTI
-	
-	;; LDA needppureg
-	;; BNE Next
-	;; LDA soft2001
-	;; STA $2001
-	;; LDA soft2000
-	;; STA $2000
+	;; need to change something above with adding logic to turn screen off for a redraw...
+
 PpuScroll:
 	BIT $2002
 	LDA #$00
@@ -182,46 +149,20 @@ PpuScroll:
 	;; LDA #0 ;reset sleeping to 0 so WaitFrame exits
 	;; STA sleeping
 
-	;; LDA #$00
-	;; STA draw_flags
-
-	;; 9)pull registers/status flags off stack
+	LDA #$00
+	STA draw_flags
 	PullAll
 
 	RTI
 
 
 DoDrawing:
-	RTS ;not drawing anything right now... have to fix code below
+
+	.include "levels.asm"
+
+DoDrawingDone:	
+	RTS
 	
-;; 	LDX #$00
-;; 	LDY #$00
-;; 	LDA testbuffer
-;; 	TAY
-;; 	DEY
-;; 	INC
-;; OuterLoop:	
-;; 	LDA testbuffer, X
-;; 	INX
-	
-;; 	DEY
-;; 	CPY #$00
-;; 	BEQ DoDrawingDone	
-;; 	LDA testbuffer, X
-;; 	STA $2006
-;; 	INX
-;; 	LDA testbuffer, X
-;; 	STA $2006
-;; 	INX
-;; 	;X should be at #$03 right now (in bytes to load)
-;; BuffLoop:	
-;; 	LDA testbuffer, X
-;; 	STA $2007
-;; 	INX
-;; 	CPX bufflength
-;; 	BNE BuffLoop
-;; DoDrawingDone:
-;; 	RTS
 UpdateJoypadData:
 	LDA #$01
 	STA $4016
@@ -236,13 +177,8 @@ ReadController1Loop:
 	BNE ReadController1Loop
 	RTS
 
-testbuffer:
-	.db $07,$20,$00,$00,$01,02,03
-
-spritebuffer:
-	.db $??,$80,$02,$00,$01,$02,$01,
-
 	.include "colorbuffers.asm"
+	.include "levelbuffers.asm"
 
 ;----------------------------------------------------------------
 ; interrupt vectors

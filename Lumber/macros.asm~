@@ -1,0 +1,50 @@
+	.macro PushAll
+	PHP
+	PHA
+	TXA
+	PHA
+	TYA
+	PHA
+	.endm
+
+	.macro PullAll
+	PLA
+	TAY
+	PLA
+	TAX
+	PLA
+	PLP
+	.endm
+
+	.macro FIRE_Level_1
+Gold_1_Loop:	
+	DEC FrameCounter
+
+	LDA FrameCounter
+	CMP #$00
+	BNE Gold_1_Loop
+
+	DEX
+	CPX #$00
+	BNE Gold_1_Loop
+Gold_1:
+	LDA #$21
+	STA $0215
+	LDA #$FF
+	STA FrameCounter
+	TAX
+Gold_2_Loop:	
+	DEC FrameCounter
+
+	LDA FrameCounter
+	CMP #$00
+	BNE Gold_2_Loop
+
+	DEX
+	CPX #$00
+	BNE Gold_2_Loop
+Gold_2:
+	LDA #$20
+	STA $0215
+	.endm
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

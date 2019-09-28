@@ -1,20 +1,25 @@
+background:
+	.db $00,$01,$02,$03
+	
 palette:
 	.db $20,$29,$1A,$0F,  $20,$36,$17,$0F,  $20,$30,$21,$0F,  $20,$27,$17,$0F   ;;background palette
-	.db $20,$16,$27,$18,  $20,$02,$38,$3C,  $20,$1C,$15,$14,  $20,$02,$38,$3C   ;;sprite palette
+	.db $20,$16,$27,$18,  $20,$17,$28,$39,  $20,$1C,$15,$14,  $20,$02,$38,$3C   ;;sprite palette
+
+sprites:
+     ;could have this be the characters orientation (forward, backward, etc)
+	.db $01,$02,$03,$04 
 	
 attribute:
-	;; attribute bits to assign which palette to use on the specific "block"
-	;; each "block" is made up of 4 quadrants. a single quadrant is made up of 32x32 pixles (or 4 separate sprites from the nametable)
-	;; eg: a single SMB brick is made up of 4 8x8 sprites - and one attribute "block" is made up of 4 bricks. Each block is 1 byte in size.
-	;; these 1 byte "blocks" are below, and when you modify the bits you are choosing which palette gets assigned to which quadrant of the block. 2 bits per.
-	;; 00000000
-	;; ||||||++- 0th and 1st bits for top left quadrant
-	;; ||||++--- 2nd and 3rd bits for top right qiuadrant
-	;; ||++----- 4th and 5th bits for bottom left quadrant
-	;; ++------- 6th and 7th bits for bottom right quadrant
-	;; two bits for a range of values from 0 - 3 in decimal. - 00, 01, 10, 11
-	.db %00000000, %00010000, %01010000, %00010000, %00000000, %00000000, %00000000, %00110000
-
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	.db %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000, %00000000
+	
 	
 	.db $01,$01,$01,$01, $01,$01,$01,$01 ,$01,$01,$47,$47, $47,$47,$24,$24 ,$24,$24,$24,$24 ,$24,$24,$24,$24, $24,$24,$24,$24, $55,$56,$24,$24
 	.db $01,$01,$01,$01, $24,$24,$24,$24 ,$24,$24,$24,$24, $24,$24,$24,$24 ,$24,$24,$24,$24 ,$24,$24,$24,$24, $24,$24,$24,$24, $24,$24,$24,$24
+

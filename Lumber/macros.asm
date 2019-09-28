@@ -15,10 +15,4 @@
 	PLA
 	PLP
 	.endm
-
-	.macro setAXY x,y,z
-	LDA #x
-	LDX #y
-	LDY #z
-	.endm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
