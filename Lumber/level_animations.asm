@@ -11,7 +11,7 @@
 ;Level 1
 ;------------------------------------------------
 
-Level_1_Animations:	
+Level_1_Animations:
 Gold_1_Loop:	
 	DEC FrameCounter1
 
@@ -22,22 +22,47 @@ Gold_1_Loop:
 	DEX
 	CPX #$00
 	BNE Forever
-Gold_1:	
-	LDA $0228
+Gold_1:
+	LDA Level_1_Enemies
+	CMP #$01
+	BNE Enemy1_Neg
+Enemy1_Pos:	
+	LDA $0228		;y-position
 	CMP #$A0
 	BEQ Enemy1_1_1
 	CLC
-	ADC #$04
+	ADC #$08
 	STA $0228
-	CMP #$A0
-	BNE Next1
+	JMP Next1
 Enemy1_1_1:	
-	LDA $022B
-	CLC
-	ADC #$04
-	STA $022B
+	LDA $022B		;x-position
 	CMP #$A0
+	BEQ Enemy1_1_2
+	CLC
+	ADC #$08
+	STA $022B
+	JMP Next1
+Enemy1_1_2:
+	LDA #$02
+	STA Level_1_Enemies
+Enemy1_Neg:
+	LDA $0228
+	CMP #$80
+	BEQ Enemy1_1_3
+	SEC
+	SBC #$08
+	STA $0228
+	JMP Next1
+Enemy1_1_3:
+	LDA $022B
+	SEC
+	SBC #$08
+	STA $022B
+	CMP #$80
 	BNE Next1
+	LDA #$01
+	STA Level_1_Enemies
+	
 Next1:	
 	LDA $0215
 	CMP #$20
