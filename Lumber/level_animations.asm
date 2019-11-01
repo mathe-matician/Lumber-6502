@@ -1,27 +1,35 @@
 	LDA levels
 	CMP #%00000001
 	BEQ Level_1_Animations
-
-	CMP #%00000010
-	BEQ Level_2_Animations
-
-	JMP AnimationsDone
+	JMP Check_Lvl_2
 
 ;------------------------------------------------
 ;Level 1
 ;------------------------------------------------
 
 Level_1_Animations:
-Gold_1_Loop:	
 	DEC FrameCounter1
-
+Gold_1_Loop:
+	;; DEC FrameCounter1
 	LDA FrameCounter1
+	CMP #$00
+	;; BNE Gold_1_Loop
+	BNE Level_1_Animations
+
+	DEC FrameCounter2
+	LDA FrameCounter2
 	CMP #$00
 	BNE Gold_1_Loop
 
-	DEX
-	CPX #$00
-	BNE Forever
+	DEC FrameCounter3
+	LDA FrameCounter3
+	CMP #$80
+	BNE Gold_1_Loop
+
+	;; DEX
+	;; CPX #$00
+	;; BNE AnimationsDone
+	
 Gold_1:
 	LDA Level_1_Enemies
 	CMP #$01
@@ -62,17 +70,18 @@ Enemy1_1_3:
 	BNE Next1
 	LDA #$01
 	STA Level_1_Enemies
-	
 Next1:	
 	LDA $0215
 	CMP #$20
 	BNE Gold_1_Flip
 	LDA #$21
 	STA $0215
+	STA $023D
 	JMP Gold_1_Done
 Gold_1_Flip:	
 	LDA #$20
 	STA $0215
+	STA $023D
 Gold_1_Done:	
 	LDA #$FF
 	STA FrameCounter1
@@ -82,6 +91,10 @@ Gold_1_Done:
 ;------------------------------------------------
 ;Level 2
 ;------------------------------------------------
+Check_Lvl_2:	
+	CMP #%00000010
+	BEQ Level_2_Animations
+	JMP AnimationsDone
 	
 Level_2_Animations:
 	LDA #$10
