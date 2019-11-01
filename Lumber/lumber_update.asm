@@ -6,8 +6,8 @@ PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 STATETITLE	= $00
-STATEPLAYING	= $05
-STATEGAMEOVER	= $06
+;; STATEPLAYING	= $05
+;; STATEGAMEOVER	= $06
 RIGHTWALL	= $F9  ; when ball reaches one of these, do something
 TOPWALL     	= $20
 BOTTOMWALL  	= $B7
@@ -33,7 +33,9 @@ z_H		= z_Regs
 z_L		= z_Regs+1
 shadow_oam	= $0200
 FrameCounter1	= $04
-FrameCounter2	= $03	
+FrameCounter2	= $03
+FrameCounter3	= $05
+FrameCounter4	= $06	
 Level_1_Enemies = $07
 collide_vertical_player		= $0200	;player y position
 collide_horizontal_player	= $0203	;player x position
@@ -95,6 +97,7 @@ GameEngineRunning:
 	LDA #$FF
 	STA FrameCounter1
 	STA FrameCounter2
+	STA FrameCounter3
 	TAX
 
 	LDA #$01
@@ -106,8 +109,7 @@ GameEngineRunning:
 	LDA #%00000110 ;draw sprites
 	STA draw_flags
 Forever:
-	;; .include "collisions.asm"
-	.include "controls.asm"
+	.include "collisions.asm"
 	.include "level_animations.asm"
 	
 	
@@ -194,6 +196,8 @@ DoDrawingDone:
 	RTS
 	
 UpdateController:
+	.include "controls.asm"
+	
 	LDA #$01
 	STA $4016
 	LDA #$00
@@ -224,4 +228,4 @@ ReadController1Loop:
 ; CHR-ROM bank
 ;----------------------------------------------------------------
 
-   .incbin "gamer.chr"
+   .incbin "gamer.chr
