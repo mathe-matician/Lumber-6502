@@ -33,18 +33,26 @@ z_H		= z_Regs
 z_L		= z_Regs+1
 shadow_oam	= $0200
 FrameCounter1	= $04
-FrameCounter2	= $03
+FrameCounter2	= $03	
+Level_1_Enemies = $07
+collide_vertical_player		= $0200	;player y position
+collide_horizontal_player	= $0203	;player x position
+	
 	
    .enum $0000
 
    ;NOTE: declare variables using the DSB and DSW directives, like this:
 
-   ;MyVariable0 .dsb 1
-
-gamestate  	.dsb 1	
-buttons1  	.dsb 1
-buttons2  	.dsb 1
-levels		.dsb 1
+				;MyVariable0 .dsb 1
+p_collide_vert_col_1    .dsb 1
+p_collide_vert_col_2	.dsb 1
+p_collide_vert_col_3	.dsb 1	
+p_collide_hor_col_1     .dsb 1
+p_collide_hor_col_2	.dsb 1	
+gamestate  		.dsb 1	
+buttons1  		.dsb 1
+buttons2  		.dsb 1
+levels			.dsb 1
 	;;draw_flag bits:
 	;;00000000
 	;;|||||||+-level 1
@@ -75,10 +83,22 @@ levels		.dsb 1
 	.include "macros.asm"
 
 GameEngineRunning:
+	LDA #$78
+	STA shadow_oam
+	LDA #$01
+	STA shadow_oam+1
+	LDA #$00
+	STA shadow_oam+2
+	LDA #$78
+	STA shadow_oam+3
+	
 	LDA #$FF
 	STA FrameCounter1
 	STA FrameCounter2
 	TAX
+
+	LDA #$01
+	STA Level_1_Enemies
 
 	LDA #%00000001
 	STA levels
@@ -86,10 +106,11 @@ GameEngineRunning:
 	LDA #%00000110 ;draw sprites
 	STA draw_flags
 Forever:
+	;; .include "collisions.asm"
 	.include "controls.asm"
-	;; logic for figuring out what level we are on? this is defined
-	;; in multiple locations... not efficient.
 	.include "level_animations.asm"
+	
+	
 
 	JMP Forever
 	
