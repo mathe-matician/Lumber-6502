@@ -59,11 +59,14 @@ LoadBackground:
 ;; 	STA $2007             
 ;; 	INX                   
 ;; 	CPX #$00              
-;; 	BNE LoadBackgroundLoop1
+	;; 	BNE LoadBackgroundLoop1
+
+	LDY #$00
 
 LoadBackgroundLoop1:		;single grass color
-	LDA #$01
+	LDA background_lvl_1_1, y
 	STA $2007
+	INY
 	INX
 	CPX #$00
 	BNE LoadBackgroundLoop1
@@ -74,11 +77,13 @@ LoadBackground2:
 	STA $2006             
 	LDA #$00
 	STA $2006
-	
+
+	LDY #$00
 	LDX #$00              
 LoadBackgroundLoop2:		;single grass color
-	LDA #$01
+	LDA background_lvl_1_2, y
 	STA $2007
+	INY
 	INX
 	CPX #$00
 	BNE LoadBackgroundLoop2
@@ -89,11 +94,13 @@ LoadBackground3:
 	STA $2006             
 	LDA #$00
 	STA $2006
-	
+
+	LDY #$00
 	LDX #$00              
 LoadBackgroundLoop3:		;single grass color
-	LDA #$01
+	LDA background_lvl_1_3, y
 	STA $2007
+	INY
 	INX
 	CPX #$00
 	BNE LoadBackgroundLoop3
@@ -107,8 +114,9 @@ LoadBackground4:
 	
 	LDX #$00              
 LoadBackgroundLoop4:		;single grass color
-	LDA #$01
+	LDA background_lvl_1_4, y
 	STA $2007
+	INY
 	INX
 	CPX #$00
 	BNE LoadBackgroundLoop4
