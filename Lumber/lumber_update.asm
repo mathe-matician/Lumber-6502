@@ -8,10 +8,10 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 STATETITLE	= $00
 ;; STATEPLAYING	= $05
 ;; STATEGAMEOVER	= $06
-RIGHTWALL	= $F9  ; when ball reaches one of these, do something
-TOPWALL     	= $20
-BOTTOMWALL  	= $B7
-LEFTWALL    	= $01	
+RIGHTWALL	= $F0  ; when ball reaches one of these, do something
+TOPWALL     	= $18
+BOTTOMWALL  	= $D8
+LEFTWALL    	= $08	
 
 ;----------------------------------------------------------------
 ; variables
@@ -25,32 +25,26 @@ draw_flags 	= #%00000000
 	;;|||||+---needppureg
 	;;||||+----2000
 	;;|||+-----2001
-
-	;; fake registers in zero page
-z_Regs 		= $60
-z_HL		= z_Regs
-z_H		= z_Regs
-z_L		= z_Regs+1
-shadow_oam	= $0200
-FrameCounter1	= $04
-FrameCounter2	= $03
-FrameCounter3	= $05
-FrameCounter4	= $06	
-Level_1_Enemies = $07
-collide_vertical_player		= $0200	;player y position
-collide_horizontal_player	= $0203	;player x position
+z_Regs 			= $20
+H			= z_Regs
+L			= z_Regs+1
 	
+shadow_oam		= $0200	
+FrameCounter1		= $04
+FrameCounter2		= $03
+FrameCounter3		= $05
+FrameCounter4		= $06	
+Level_1_Enemies 	= $60
+fake_player		= $10
+temp_player_x_move	= $11
+temp_player_y_move	= $12	
 	
    .enum $0000
 
    ;NOTE: declare variables using the DSB and DSW directives, like this:
 
-				;MyVariable0 .dsb 1
-p_collide_vert_col_1    .dsb 1
-p_collide_vert_col_2	.dsb 1
-p_collide_vert_col_3	.dsb 1	
-p_collide_hor_col_1     .dsb 1
-p_collide_hor_col_2	.dsb 1	
+	;MyVariable0 .dsb 1
+;; fake_player		.dsb 1
 gamestate  		.dsb 1	
 buttons1  		.dsb 1
 buttons2  		.dsb 1
@@ -63,6 +57,16 @@ levels			.dsb 1
 	;;||||+----level 4
 	;;|||+-----level 5
 
+	;; to save space, could put collidebits into levels bit, but could be confusing.
+collidebits			.dsb 1
+	;;draw_flag bits:
+	;;00000000
+	;;||||||||-zero - open tile
+	;;|||||||+-tree
+	;;||||||+--fire/gold
+	;;|||||+---enemy
+	;;||||+----
+	;;|||+-----
    .ende
 
 ;----------------------------------------------------------------
@@ -85,6 +89,11 @@ levels			.dsb 1
 	.include "macros.asm"
 
 GameEngineRunning:
+
+	LDA #$00
+	STA fake_player
+	
+	;; can put this somehwere else and also in a buffer.
 	LDA #$78
 	STA shadow_oam
 	LDA #$01
@@ -93,7 +102,11 @@ GameEngineRunning:
 	STA shadow_oam+2
 	LDA #$78
 	STA shadow_oam+3
-	
+
+	;; LDA shadow_oam_y
+	;; STA fake_shadow_oam
+
+	;; init variables
 	LDA #$FF
 	STA FrameCounter1
 	STA FrameCounter2
@@ -109,11 +122,7 @@ GameEngineRunning:
 	LDA #%00000110 ;draw sprites
 	STA draw_flags
 Forever:
-	.include "collisions.asm"
 	.include "level_animations.asm"
-	
-	
-
 	JMP Forever
 	
 WaitFrame:
@@ -178,7 +187,6 @@ PpuScroll:
 
 	;; LDA #0 ;reset sleeping to 0 so WaitFrame exits
 	;; STA sleeping
-
 	JSR UpdateController
 
 	LDA #$00
@@ -211,6 +219,7 @@ ReadController1Loop:
 	BNE ReadController1Loop
 	RTS
 
+
 	.include "colorbuffers.asm"
 	.include "levelbuffers.asm"
 
@@ -228,4 +237,4 @@ ReadController1Loop:
 ; CHR-ROM bank
 ;----------------------------------------------------------------
 
-   .incbin "gamer.chr
+   .incbin "gamer.chr"
