@@ -58,6 +58,9 @@ zm_Regs			= $25
 Z			= zm_Regs
 M			= zm_Regs+1	
 
+Lvl1_En1_Loc		= $021C
+Lvl1_En2_Loc		= $0220	
+
 shadow_oam		= $0200	
 FrameCounter1		= $0A
 FrameCounter2		= $03
@@ -68,16 +71,23 @@ fake_player		= $10
 temp_player_x_move	= $11
 temp_player_y_move	= $12
 fake_en_1		= $21	
-temp_en_x_move		= $22
-temp_en_y_move		= $23
+temp_en2_x_move		= $22
+temp_en2_y_move		= $23
 en1_bitflag		= $27	
 	;;00000000
 	;;|||||||+-Up
 	;;||||||+--Down
 	;;|||||+---Right
 	;;||||+----Left
-enn			= $28
-enn1			= $29	
+enn1_check		= $28
+en1_direction		= $29
+temp_en1_x_move		= $2A
+temp_en1_y_move		= $2B	
+enemy_position		= $30
+en2_direction		= $31
+seed			= $32
+	;; 		= $33
+
 	
    .enum $0000
 
@@ -162,23 +172,33 @@ Load_Lvl1:
 GameEngineRunning:	
 
 	LDA #$00
-	STA temp_en_y_move
-	STA temp_en_x_move
-	STA fake_en_1
-	STA en1_bitflag
-	STA enn
-	STA enn1
+	STA enn1_check
 
 	LDA #$FF
 	STA FrameCounter4
 	STA FrameCounter3
 	STA FrameCounter2
+
+	LDA %00000001
+	STA en1_direction
+	LDY #$00
+	STY enemy_position
+
+	LDA #$11
+	STA seed+0
+	LDA #$05
+	LDA seed+1
 	
 Forever:
-
 		
 	.include "lvl_1_enemy.asm"
 
+	LDA STATE
+	CMP %00000010
+	BNE ForeverLoop
+	JMP GameOver
+	
+ForeverLoop:	
 	;; LDA lvl1_npc_flags
 	;; AND #%00000001
 	;; BNE To_Npc1
@@ -188,6 +208,10 @@ Forever:
 	;; BNE Npc_Check1	
 	
 	JMP Forever
+
+GameOver:
+	.include "gameover.asm"
+	JMP GameOver
 
 To_Npc1:
 	JSR Lvl1_npc_text1
@@ -355,6 +379,10 @@ NMI:
 	LDA #$02
 	STA $4014
 
+	;; LDA STATE
+	;; AND %00000010
+	;; JMP GameOver
+
 NeedDraw:
 	LDA draw_flags
 	AND #%00000010
@@ -418,7 +446,10 @@ DoDrawingDone:
 	RTS
 	
 UpdateController:
-	;; .include "lvl_1_enemy.asm"
+	
+	PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
+	.include "lvl1enemy.asm"
+	
 	.include "controls.asm"	
 	;; JSR Control_State
 	
