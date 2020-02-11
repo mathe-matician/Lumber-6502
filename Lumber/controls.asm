@@ -43,7 +43,7 @@ TextControlsDone:
 	JMP ControlsDone
 
 Gameover_Controls:
-	;; do something
+	JMP ControlsDone
 
 Start_Controls:	
 	LDA buttons1
@@ -60,7 +60,7 @@ Start_ControlsDone:
 Game_Controls:
 
 	LDA FrameCounter1
-	CMP #$04
+	CMP #$06
 	BEQ Start_Game_Controls
 	JMP ControlsDone
 	
@@ -107,29 +107,10 @@ WalkUpDone:
 	SBC #$08
 	STA temp_player_y_move
 
-	LDA #$00
-	STA L
-	LDA temp_player_y_move
-	AND #%11111000
-	ASL
-	ROL L
-	ASL
-	ROL L
-	ADC #<background_lvl_1_1
-	STA H
-	LDA L
-	ADC #>background_lvl_1_1
-	STA L
-	LDA temp_player_x_move	;should be shadow_oam+3 current location
-	LSR
-	LSR
-	LSR			;divide by 8
-	TAY
-	
-	LDA (H), Y
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
 	STA fake_player
 	CMP #$04
-	BEQ MovePlayerUpDone
+	BEQ MovePlayerUpDone	
 	LDA fake_player
 	CMP #$07
 	BEQ SevenBlockUp
@@ -180,26 +161,7 @@ WalkDownDone:
 	ADC #$08
 	STA temp_player_y_move
 
-	LDA #$00
-	STA L
-	LDA temp_player_y_move
-	AND #%11111000
-	ASL
-	ROL L
-	ASL
-	ROL L
-	ADC #<background_lvl_1_1
-	STA H
-	LDA L
-	ADC #>background_lvl_1_1
-	STA L
-	LDA temp_player_x_move	;should be shadow_oam+3 current location
-	LSR
-	LSR
-	LSR			;divide by 8
-	TAY
-	
-	LDA (H), Y
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerDownDone
@@ -246,26 +208,8 @@ WalkRightDone:
 	ADC #$08
 	STA temp_player_x_move
 
-	LDA #$00
-	STA L
-	LDA temp_player_y_move
-	AND #%11111000
-	ASL
-	ROL L
-	ASL
-	ROL L
-	ADC #<background_lvl_1_1
-	STA H
-	LDA L
-	ADC #>background_lvl_1_1
-	STA L
-	LDA temp_player_x_move	;should be shadow_oam+3 current location
-	LSR
-	LSR
-	LSR			;divide by 8
-	TAY
 	
-	LDA (H), Y
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerRightDone
@@ -313,26 +257,7 @@ WalkLeftDone:
 	SBC #$08
 	STA temp_player_x_move
 
-	LDA #$00
-	STA L
-	LDA temp_player_y_move
-	AND #%11111000
-	ASL
-	ROL L
-	ASL
-	ROL L
-	ADC #<background_lvl_1_1
-	STA H
-	LDA L
-	ADC #>background_lvl_1_1
-	STA L
-	LDA temp_player_x_move	;should be shadow_oam+3 current location
-	LSR
-	LSR
-	LSR			;divide by 8
-	TAY
-	
-	LDA (H), Y
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerLeftDone
