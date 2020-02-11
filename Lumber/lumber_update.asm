@@ -59,7 +59,9 @@ Z			= zm_Regs
 M			= zm_Regs+1	
 
 Lvl1_En1_Loc		= $021C
-Lvl1_En2_Loc		= $0220	
+Lvl1_En2_Loc		= $0220
+Lvl1_En3_Loc		= $0224
+Lvl1_En4_Loc		= $0228	
 
 shadow_oam		= $0200	
 FrameCounter1		= $0A
@@ -71,8 +73,8 @@ fake_player		= $10
 temp_player_x_move	= $11
 temp_player_y_move	= $12
 fake_en_1		= $21	
-temp_en2_x_move		= $22
-temp_en2_y_move		= $23
+temp_en_x_move		= $22
+temp_en_y_move		= $23
 en1_bitflag		= $27	
 	;;00000000
 	;;|||||||+-Up
@@ -80,9 +82,7 @@ en1_bitflag		= $27
 	;;|||||+---Right
 	;;||||+----Left
 enn1_check		= $28
-en1_direction		= $29
-temp_en1_x_move		= $2A
-temp_en1_y_move		= $2B	
+en1_direction		= $29	
 enemy_position		= $30
 en2_direction		= $31
 seed			= $32
@@ -191,7 +191,7 @@ GameEngineRunning:
 	
 Forever:
 		
-	.include "lvl_1_enemy.asm"
+	;; .include "lvl_1_enemy.asm"
 
 	LDA STATE
 	CMP %00000010
