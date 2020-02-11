@@ -32,7 +32,7 @@ LoadNPC_lvl_1:
 	LDA #$01
 	STA Level_1_Enemies
 
-	LDX #$08
+	LDX #$10
 	LDY #$00
 LoadENS_lvl_1:
 	LDA level_1_enemy1, y
