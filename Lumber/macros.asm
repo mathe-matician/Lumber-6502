@@ -68,5 +68,10 @@ Seed2:
 		BNE Seed1
 		STA S1+0
 		CMP #$00		;reload flags
+	
+		LDA S1
+		CLC
+		ADC #$05
+		STA S1
 	ENDM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
