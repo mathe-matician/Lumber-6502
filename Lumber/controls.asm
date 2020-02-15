@@ -8,42 +8,51 @@ Control_State:
 	LDA STATE
 	AND #%00000010
 	BNE Gameover_Controls
-	LDA STATE
-	AND #%00000100
-	BNE Text_Controls
+	;; LDA STATE
+	;; AND #%00000100
+	;; BNE Text_Controls
 
 	;; RTS
 	JMP ControlsDone
 
 	;; Set up Jump table instead of branches
 
-Text_Controls:
-	LDA buttons1
-	AND #%10000000
-	BEQ TextControlsDone	;could change to RTS
+;; Text_Controls:
+;; 	LDA buttons1
+;; 	AND #%10000000
+;; 	BEQ TextControlsDone	;could change to RTS
 
-	LDA lvl1_npc_flags
-	AND #%00000010
-	BEQ TextControlsDone	;could change to RTS
+;; 	LDA lvl1_npc_flags
+;; 	AND #%00000010
+;; 	BEQ TextControlsDone	;could change to RTS
 
-	LDA #%00000100
-	STA lvl1_npc_flags
+;; 	LDA #%00000100
+;; 	STA lvl1_npc_flags
 	
-	LDA #%00011110
-	STA $2001
+;; 	LDA #%00011110
+;; 	STA $2001
 
-	LDA #$00
-	STA FrameCounter1
-	STA STATE
-	LDA #%00000001
-	STA STATE
+;; 	LDA #$00
+;; 	STA FrameCounter1
+;; 	STA STATE
+;; 	LDA #%00000001
+;; 	STA STATE
 	
 TextControlsDone:
 	;; RTS 			;should go back to UpdateController
 	JMP ControlsDone
 
 Gameover_Controls:
-	JMP ControlsDone
+	LDA buttons1
+	AND #%00010000
+	BEQ Start_ControlsDone
+
+	LDA #%00010000
+	STA $2000
+	LDA #$00
+	STA $2001
+	
+	JMP RESET		; goes to blank screen
 
 Start_Controls:	
 	LDA buttons1
@@ -127,6 +136,11 @@ SevenBlockUp:
 	STA sevenblock
 	
 MovePlayerUpDone:
+	LDA playerfacing
+	CMP #%00001000
+	BNE MovePlayerDown
+	LDA #$02
+	STA shadow_oam+1
 
 MovePlayerDown:
 	LDA buttons1
@@ -174,6 +188,11 @@ WalkDownDone:
 	JMP MovePlayerDownDone
 
 MovePlayerDownDone:
+	LDA playerfacing
+	CMP #%00000100
+	BNE MovePlayerRight
+	LDA #$01
+	STA shadow_oam+1
 
 MovePlayerRight:
 	LDA buttons1
@@ -222,6 +241,11 @@ WalkRightDone:
 	JMP MovePlayerRightDone
 
 MovePlayerRightDone:
+	LDA playerfacing
+	CMP #%00000001
+	BNE MovePlayerLeft
+	LDA #$03
+	STA shadow_oam+1
 
 MovePlayerLeft:
 	LDA buttons1
@@ -274,7 +298,12 @@ SevenBlockLeft:
 	LDA #%00000010
 	STA sevenblock
 	
-MovePlayerLeftDone:	
+MovePlayerLeftDone:
+	LDA playerfacing
+	CMP #%00000010
+	BNE PlayerPunch
+	LDA #$04
+	STA shadow_oam+1
 
 PlayerPunch:
 	LDA buttons1
@@ -288,22 +317,10 @@ PlayerPunch:
 	LDA playerfacing
 	AND #%00000100
 	BNE PunchDown
-
-	LDA $0201
-	CMP #$04
-	BEQ PunchLeft
-	CMP #$14
-	BEQ PunchLeft
 	
 	LDA playerfacing
 	AND #%00000010
 	BNE PunchLeft
-
-	LDA $0201
-	CMP #$03
-	BEQ PunchRight
-	CMP #$13
-	BEQ PunchRight
 
 	LDA playerfacing
 	AND #%00000001
@@ -331,6 +348,7 @@ PunchRight:
 	STA $0201
 
 PunchDone:
+	
 
 PlayerAction:
 	LDA buttons1
@@ -389,7 +407,31 @@ ActionLeft:
 	STA sevenblock
 
 PlayerActionDone:
-	LDA #$00
-	STA playerfacing
+	;; LDA #$00
+	;; STA playerfacing
+;; 	LDA playerfacing
+;; 	AND #%00001000
+;; 	BEQ +
+;; 	LDA #$02
+;; 	STA shadow_oam+1
+;; +		
+;; 	LDA playerfacing
+;; 	AND #%00000100
+;; 	BEQ +
+;; 	LDA #$01
+;; 	STA shadow_oam+1
+;; +
+;; 	LDA playerfacing
+;; 	AND #%00000010
+;; 	BEQ +
+;; 	LDA #$04
+;; 	STA shadow_oam+1
+;; +
+;; 	LDA playerfacing
+;; 	AND #%00000001
+;; 	BEQ +
+;; 	LDA #$03
+;; 	STA shadow_oam+1
+;; +
 	
 ControlsDone:	
