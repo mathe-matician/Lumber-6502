@@ -91,6 +91,7 @@ enemy_position		= $30
 en2_direction		= $31
 seed			= $32
 	;; 		= $33
+sound_disable_flag	= $34
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -479,14 +480,6 @@ PpuScroll:
 
 
 DoDrawing:
-	;; LDA #$78
-	;; STA shadow_oam
-	;; LDA #$01
-	;; STA shadow_oam+1
-	;; LDA #$00
-	;; STA shadow_oam+2
-	;; LDA #$78
-	;; STA shadow_oam+3
 
 	;; .include "levels.asm"
 
@@ -495,7 +488,6 @@ DoDrawingDone:
 	
 UpdateController:
 	
-	;; PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
 	.include "lvl1enemy.asm"
 	
 	.include "controls.asm"	
