@@ -63,7 +63,11 @@ Lvl1_En2_Loc		= $0220
 Lvl1_En3_Loc		= $0224
 Lvl1_En4_Loc		= $0228	
 
-shadow_oam		= $0200	
+shadow_oam		= $0200
+playerax_r		= $022C
+playerax_l		= $0230
+playerax_u		= $0234
+playerax_d		= $0238	
 FrameCounter1		= $0A
 FrameCounter2		= $03
 FrameCounter3		= $05
@@ -88,13 +92,61 @@ en2_direction		= $31
 seed			= $32
 	;; 		= $33
 
+;-----------------------------------------
+; Audio - Note Variables
+;-----------------------------------------
+
+	;; Octave1
+A1			= $0400
+As1			= $0401
+Bb1			= $0401
+B1			= $0402
+	;; Octave2
+C2			= $0403
+Db2			= $0404
+D2			= $0405
+Eb2			= $0406
+E2			= $0407
+F2			= $0408
+Gb2			= $0409
+G2			= $040A
+A2			= $040B
+Ab2			= $040C
+A2			= $040D
+Bb2			= $040E
+B2			= $040F
+	;; Octave3
+C3			= $0410
+Db3			= $0411
+D3			= $0412
+Eb3			= $0413
+E3			= $0414
+F3			= $0415
+Gb3			= $0416
+G3			= $0417
+A3			= $0418
+Ab3			= $0419
+A3			= $041A
+Bb3			= $041B
+B3			= $041C
+	;; Octave4
+C4			= $041D
+Db4			= $041E
+D4			= $041F
+Eb4			= $0420
+E4			= $0421
+F4			= $0422
+Gb4			= $0423
+G4			= $0424
+A4			= $0425
+Ab4			= $0426
+A4			= $0427
+Bb4			= $0428
+B4			= $0429	
+	
 	
    .enum $0000
 
-   ;NOTE: declare variables using the DSB and DSW directives, like this:
-
-	;MyVariable0 .dsb 1
-;; fake_player		.dsb 1
 gamestate  		.dsb 1
 buttons1  		.dsb 1
 	;;00000000
@@ -160,10 +212,10 @@ StartScreen:
 	LDA #%00011110
 	STA draw_flags
 	
-StartLoop:
+@StartLoop:
 	LDA STATE
 	AND #%00000001
-	BEQ StartLoop
+	BEQ @StartLoop
 
 	.include "lvl_1_init.asm"
 Load_Lvl1:	
@@ -190,13 +242,13 @@ GameEngineRunning:
 	LDA seed+1
 	
 Forever:
-		
-	;; .include "lvl_1_enemy.asm"
 
-	LDA STATE
-	CMP %00000010
-	BNE ForeverLoop
-	JMP GameOver
+	;; LDA STATE
+	;; CMP %00000010
+	;; BNE ForeverLoop
+	;; JMP GameOver
+
+	PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
 	
 ForeverLoop:	
 	;; LDA lvl1_npc_flags
@@ -379,10 +431,6 @@ NMI:
 	LDA #$02
 	STA $4014
 
-	;; LDA STATE
-	;; AND %00000010
-	;; JMP GameOver
-
 NeedDraw:
 	LDA draw_flags
 	AND #%00000010
@@ -447,7 +495,7 @@ DoDrawingDone:
 	
 UpdateController:
 	
-	PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
+	;; PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
 	.include "lvl1enemy.asm"
 	
 	.include "controls.asm"	

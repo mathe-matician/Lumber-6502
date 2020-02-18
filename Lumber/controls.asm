@@ -86,8 +86,9 @@ Start_Game_Controls:
 MovePlayerUp:	
 	LDA buttons1
 	AND #%00001000
-	BEQ MovePlayerUpDone
-
+	BNE Upgoing
+	JMP MovePlayerUpDone
+Upgoing:	
 	LDA #%00001000
 	STA playerfacing
 
@@ -125,10 +126,31 @@ WalkUpDone:
 	BEQ SevenBlockUp
 
 	;; move player up if open space
-	LDA $0200
+	LDA shadow_oam
 	SEC
 	SBC #$08
-	STA $0200
+	STA shadow_oam
+
+	LDA playerax_r
+	SEC
+	SBC #$08
+	STA playerax_r
+
+	LDA playerax_l
+	SEC
+	SBC #$08
+	STA playerax_l
+
+	LDA playerax_u
+	SEC
+	SBC #$08
+	STA playerax_u
+
+	LDA playerax_d
+	SEC
+	SBC #$08
+	STA playerax_d
+	
 	JMP MovePlayerUpDone
 
 SevenBlockUp:
@@ -141,26 +163,29 @@ MovePlayerUpDone:
 	BNE MovePlayerDown
 	LDA #$02
 	STA shadow_oam+1
+	LDA #$16
+	STA playerax_u+1
 
 MovePlayerDown:
 	LDA buttons1
 	AND #%00000100
-	BEQ MovePlayerDownDone
-
+	BNE Downgoing
+	JMP MovePlayerDownDone
+Downgoing:	
 	LDA #%00000100
 	STA playerfacing
 
 MovingPlayerDown:
 	
 	LDA $0201
-	CMP #$11
+	CMP #$01
 	BEQ WalkDown
 
 	LDA #$11
 	STA $0201
 	JMP WalkDownDone
 WalkDown:
-	LDA #$22
+	LDA #$11
 	STA $0201
 
 WalkDownDone:	
@@ -181,10 +206,31 @@ WalkDownDone:
 	BEQ MovePlayerDownDone
 
 	;; move player down if no collision
-	LDA $0200
+	LDA shadow_oam
 	CLC
 	ADC #$08
-	STA $0200
+	STA shadow_oam
+
+	LDA playerax_r
+	CLC
+	ADC #$08
+	STA playerax_r
+
+	LDA playerax_l
+	CLC
+	ADC #$08
+	STA playerax_l
+
+	LDA playerax_u
+	CLC
+	ADC #$08
+	STA playerax_u
+
+	LDA playerax_d
+	CLC
+	ADC #$08
+	STA playerax_d
+	
 	JMP MovePlayerDownDone
 
 MovePlayerDownDone:
@@ -193,12 +239,15 @@ MovePlayerDownDone:
 	BNE MovePlayerRight
 	LDA #$01
 	STA shadow_oam+1
+	LDA #$16
+	STA playerax_d+1
 
 MovePlayerRight:
 	LDA buttons1
 	AND #%00000001
-	BEQ MovePlayerRightDone
-
+	BNE Rightgoing
+	JMP MovePlayerRightDone
+Rightgoing:	
 	LDA #%00000001
 	STA playerfacing
 
@@ -238,19 +287,45 @@ WalkRightDone:
 	CLC
 	ADC #$08
 	STA $0203
+
+	LDA playerax_r+3
+	CLC
+	ADC #$08
+	STA playerax_r+3
+
+	LDA playerax_l+3
+	CLC
+	ADC #$08
+	STA playerax_l+3
+
+	LDA playerax_u+3
+	CLC
+	ADC #$08
+	STA playerax_u+3
+
+	LDA playerax_d+3
+	CLC
+	ADC #$08
+	STA playerax_d+3
+	
 	JMP MovePlayerRightDone
 
 MovePlayerRightDone:
 	LDA playerfacing
 	CMP #%00000001
 	BNE MovePlayerLeft
-	LDA #$03
+	LDA #$26
 	STA shadow_oam+1
+	LDA #$16
+	STA playerax_r+1
 
 MovePlayerLeft:
 	LDA buttons1
 	AND #%00000010
-	BEQ MovePlayerLeftDone
+	BNE Leftgoing
+	JMP MovePlayerLeftDone
+
+Leftgoing:	
 
 	LDA #%00000010
 	STA playerfacing
@@ -293,6 +368,27 @@ WalkLeftDone:
 	SEC
 	SBC #$08
 	STA $0203
+
+	LDA playerax_r+3
+	SEC
+	SBC #$08
+	STA playerax_r+3
+
+	LDA playerax_l+3
+	SEC
+	SBC #$08
+	STA playerax_l+3
+
+	LDA playerax_u+3
+	SEC
+	SBC #$08
+	STA playerax_u+3
+
+	LDA playerax_d+3
+	SEC
+	SBC #$08
+	STA playerax_d+3
+	
 	JMP MovePlayerLeftDone
 SevenBlockLeft:
 	LDA #%00000010
@@ -302,8 +398,10 @@ MovePlayerLeftDone:
 	LDA playerfacing
 	CMP #%00000010
 	BNE PlayerPunch
-	LDA #$04
+	LDA #$27
 	STA shadow_oam+1
+	LDA #$16
+	STA playerax_l+1
 
 PlayerPunch:
 	LDA buttons1
@@ -331,21 +429,29 @@ PlayerPunch:
 PunchUp:
 	LDA #$0A
 	STA $0201
+	LDA #$1A
+	STA playerax_u+1
 	JMP PunchDone
 
 PunchDown:
 	LDA #$09
 	STA $0201
+	LDA #$19
+	STA playerax_d+1
 	JMP PunchDone
 
 PunchLeft:
 	LDA #$08
 	STA $0201
+	LDA #$18
+	STA playerax_l+1
 	JMP PunchDone
 
 PunchRight:
 	LDA #$07
 	STA $0201
+	LDA #$17
+	STA playerax_r+1
 
 PunchDone:
 	

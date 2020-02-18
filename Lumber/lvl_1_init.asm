@@ -4,16 +4,25 @@
 	LDA #$00
 	STA fake_player
 	STA lvl1_npc_flags
+	LDA #%00001000
+
+	LDX #$04
+	LDY #$00
+LoadPlayer:
+	LDA player_init, y
+	STA shadow_oam, y
+	INY
+	DEX
+	BNE LoadPlayer
 	
-	;; can put this somehwere else and also in a buffer.
-	LDA #$78
-	STA shadow_oam
-	LDA #$01
-	STA shadow_oam+1
-	LDA #$00
-	STA shadow_oam+2
-	LDA #$78
-	STA shadow_oam+3
+	LDX #$10
+	LDY #$00
+LoadAx:
+	LDA player_ax, y
+	STA playerax_r, y
+	INY
+	DEX
+	BNE LoadAx
 
 	LDX #$20
 	LDY #$00
@@ -27,7 +36,6 @@ LoadNPC_lvl_1:
 	;; init variables
 	LDA #$FF
 	STA FrameCounter1
-	;; TAX
 
 	LDA #$01
 	STA Level_1_Enemies
