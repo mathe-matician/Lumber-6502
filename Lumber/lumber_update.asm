@@ -13,7 +13,7 @@ STATE		= $13
 	;; |||||+---Text Box
 	;; ||||+----	
 	
-RIGHTWALL	= $F0  ; when ball reaches one of these, do something
+RIGHTWALL	= $F0  
 TOPWALL     	= $18
 BOTTOMWALL  	= $D8
 LEFTWALL    	= $08	
@@ -92,6 +92,13 @@ en2_direction		= $31
 seed			= $32
 	;; 		= $33
 sound_disable_flag	= $34
+S			= $35
+Q			= $36
+lo			= $37
+hi			= $38
+resultlo		= $39
+resulthi		= $3A
+BG256			= $3B	
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -131,7 +138,7 @@ A3			= $041A
 Bb3			= $041B
 B3			= $041C
 	;; Octave4
-C4			= $041D
+C4			= $041D	;middle C
 Db4			= $041E
 D4			= $041F
 Eb4			= $0420
@@ -149,6 +156,7 @@ B4			= $0429
    .enum $0000
 
 gamestate  		.dsb 1
+;; BG256			.dsb 1	
 buttons1  		.dsb 1
 	;;00000000
 	;;|||||||+--Right
@@ -222,7 +230,12 @@ StartScreen:
 Load_Lvl1:	
 	.include "lvl_1.asm"
 
-GameEngineRunning:	
+GameEngineRunning:
+
+	LDA #$CC
+	STA hi
+	LDA #$33
+	STA lo
 
 	LDA #$00
 	STA enn1_check
@@ -244,12 +257,7 @@ GameEngineRunning:
 	
 Forever:
 
-	;; LDA STATE
-	;; CMP %00000010
-	;; BNE ForeverLoop
-	;; JMP GameOver
-
-	PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
+	;; PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
 	
 ForeverLoop:	
 	;; LDA lvl1_npc_flags
@@ -465,10 +473,7 @@ PpuScroll:
 
 	;; LDA #0 ;reset sleeping to 0 so WaitFrame exits
 	;; STA sleeping
-	LDA FrameCounter1
-	CLC
-	ADC #$01
-	STA FrameCounter1
+	INC FrameCounter1
 	
 	JSR UpdateController
 
@@ -488,7 +493,7 @@ DoDrawingDone:
 	
 UpdateController:
 	
-	.include "lvl1enemy.asm"
+	;; .include "lvl1enemy.asm"
 	
 	.include "controls.asm"	
 	;; JSR Control_State
@@ -507,6 +512,7 @@ ReadController1Loop:
 	RTS
 
 	;; .include "controls.asm"
+	;; .include "chop.asm"
 	.include "colorbuffers.asm"
 	.include "levelbuffers.asm"
 

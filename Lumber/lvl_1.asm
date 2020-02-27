@@ -2,90 +2,108 @@ vblankwait2:
 	BIT $2002
 	BPL vblankwait2
 
+	LDA #%10010000
+	STA $2000
 	LDA #%00000000
 	STA $2001	
-
-;; clrmem1:
-;; 	LDA #$00
-;; 	STA $0000, x
-;; 	STA $0100, x
-;; 	STA $0300, x
-;; 	STA $0400, x
-;; 	STA $0500, x
-;; 	STA $0600, x
-;; 	STA $0700, x
-;; 	LDA #$FF
-;; 	STA $0200, x		;shadow OAM
-;; 	INX
-;; 	BNE clrmem1
 
 LoadBackground:
 	LDA $2002            
 	LDA #$20
 	STA $2006           
 	LDA #$00
-	STA $2006           
-	LDX #$00            
+	STA $2006
 
-	LDY #$00
-
-LoadBackgroundLoop1:	
-	LDA background_lvl_1_1, y
-	STA $2007
+	LDA #$00
+	STA BG256
+	TAY
+	TAX
+LoadBackgroundLoop1_RLE:
+	LDA background_lvl_1_1_rle, y
+	TAX
 	INY
-	INX
-	CPX #$00
-	BNE LoadBackgroundLoop1
+Loop1:
+	LDA background_lvl_1_1_rle, y
+	STA $2007
+	LDA #$00
+	STA $2005
+	STA $2005
+	DEX
+	BNE Loop1
+	INY
+	LDA BG256
+	CLC
+	ADC #$01
+	STA BG256
+	LDA BG256
+	CMP #$80
+	BNE LoadBackgroundLoop1_RLE
 	
 LoadBackground2:
 	LDA $2002
 	LDA #$21
 	STA $2006             
-	LDA #$00
+	LDA #$8B
 	STA $2006
 
-	LDY #$00
-	LDX #$00              
-LoadBackgroundLoop2:		
-	LDA background_lvl_1_2, y
-	STA $2007
+	LDA #$00
+	STA BG256
+	TAY
+	TAX
+LoadBackgroundLoop2_RLE:
+	LDA background_lvl_1_2_rle, y
+	TAX
 	INY
-	INX
-	CPX #$00
-	BNE LoadBackgroundLoop2
+Loop2:
+	LDA background_lvl_1_2_rle, y
+	STA $2007
+	LDA #$00
+	STA $2005
+	STA $2005
+	DEX
+	BNE Loop2
+	INY
+	LDA BG256
+	CLC
+	ADC #$01
+	STA BG256
+	LDA BG256
+	CMP #$80
+	BNE LoadBackgroundLoop2_RLE
+
+	
 	
 LoadBackground3:
 	LDA $2002
 	LDA #$22
 	STA $2006             
-	LDA #$00
+	LDA #$8F
 	STA $2006
 
-	LDY #$00
-	LDX #$00              
-LoadBackgroundLoop3:	
-	LDA background_lvl_1_3, y
-	STA $2007
-	INY
-	INX
-	CPX #$00
-	BNE LoadBackgroundLoop3
-	
-LoadBackground4:
-	LDA $2002
-	LDA #$23
-	STA $2006             
 	LDA #$00
-	STA $2006
-	
-	LDX #$00              
-LoadBackgroundLoop4:	
-	LDA background_lvl_1_4, y
-	STA $2007
+	STA BG256
+	TAY
+	TAX
+LoadBackgroundLoop3_RLE:
+	LDA background_lvl_1_3_rle, y
+	TAX
 	INY
-	INX
-	CPX #$00
-	BNE LoadBackgroundLoop4
+Loop3:
+	LDA background_lvl_1_3_rle, y
+	STA $2007
+	LDA #$00
+	STA $2005
+	STA $2005
+	DEX
+	BNE Loop3
+	INY
+	LDA BG256
+	CLC
+	ADC #$01
+	STA BG256
+	LDA BG256
+	CMP #$62
+	BNE LoadBackgroundLoop3_RLE
 	
 LoadPalettes1:
 	LDA $2002          
@@ -115,5 +133,8 @@ LoadAttributeLoop1:
 	CPX #$40              
 	BNE LoadAttributeLoop1
 
+	LDA #$00
+	STA $2005
+	STA $2005
 	LDA #%00011110
 	STA $2001
