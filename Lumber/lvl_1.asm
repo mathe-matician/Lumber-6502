@@ -14,96 +14,39 @@ LoadBackground:
 	LDA #$00
 	STA $2006
 
-	LDA #$00
-	STA BG256
+	;; put the map index (nametable address) in register A going into this
+	LDA $2000
+	;; multiply index by 2, since it is 16bit
+	ASL
 	TAY
-	TAX
-LoadBackgroundLoop1_RLE:
-	LDA background_lvl_1_1_rle, y
-	TAX
-	INY
-Loop1:
-	LDA background_lvl_1_1_rle, y
-	STA $2007
-	LDA #$00
-	STA $2005
-	STA $2005
-	DEX
-	BNE Loop1
-	INY
-	LDA BG256
-	CLC
-	ADC #$01
-	STA BG256
-	LDA BG256
-	CMP #$80
-	BNE LoadBackgroundLoop1_RLE
-	
-LoadBackground2:
-	LDA $2002
-	LDA #$21
-	STA $2006             
-	LDA #$8B
-	STA $2006
 
-	LDA #$00
-	STA BG256
-	TAY
-	TAX
-LoadBackgroundLoop2_RLE:
-	LDA background_lvl_1_2_rle, y
-	TAX
-	INY
-Loop2:
-	LDA background_lvl_1_2_rle, y
-	STA $2007
-	LDA #$00
-	STA $2005
-	STA $2005
-	DEX
-	BNE Loop2
-	INY
-	LDA BG256
-	CLC
-	ADC #$01
-	STA BG256
-	LDA BG256
-	CMP #$80
-	BNE LoadBackgroundLoop2_RLE
+	LDA lvl_1bg_ptr+0, y
+	STA Pointer+0
+	LDA lvl_1bg_ptr+1, y
+	STA Pointer+1
 
-	
-	
-LoadBackground3:
-	LDA $2002
-	LDA #$22
-	STA $2006             
-	LDA #$8F
-	STA $2006
-
-	LDA #$00
+	;; copy 1024 bytes from the location indicated by the pointer to VRAM
+	LDA #$03
 	STA BG256
-	TAY
-	TAX
-LoadBackgroundLoop3_RLE:
-	LDA background_lvl_1_3_rle, y
+	LDX #$00
+	LDY #$00
+CopyByte:
+	LDA (Pointer), y
 	TAX
 	INY
-Loop3:
-	LDA background_lvl_1_3_rle, y
+CBLoop:	
+	LDA (Pointer), y
 	STA $2007
-	LDA #$00
-	STA $2005
-	STA $2005
 	DEX
-	BNE Loop3
+	BNE CBLoop
 	INY
+	BNE CopyByte
+	INC Pointer+1
 	LDA BG256
-	CLC
-	ADC #$01
+	SEC
+	SBC #$01
 	STA BG256
-	LDA BG256
-	CMP #$62
-	BNE LoadBackgroundLoop3_RLE
+	BNE CopyByte
 	
 LoadPalettes1:
 	LDA $2002          
