@@ -117,7 +117,33 @@ WalkUpDone:
 	SBC #$08
 	STA temp_player_y_move
 
-	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
+
+;; 	LDX temp_player_y_move
+;; 	LDA temp_player_x_move
+;; GetTile:
+;; 	;; divide the X coordinate by 8
+;; 	LSR
+;; 	LSR
+;; 	LSR
+;; 	TAY
+;; 	;; simulate a division by 8 followed by a multiplication by 32 of the Y cooridinate
+;; 	LDA #$00
+;; 	STA Pointer+1
+;; 	TXA
+;; 	AND #%11111000
+;; 	ASL
+;; 	ROL Pointer+1
+;; 	ASL
+;; 	ROL Pointer+1
+;; 	;; add the result to the base address of the NT
+;; 	ADC lvl_1bg_ptr+0
+;; 	STA Pointer+0
+;; 	LDA Pointer+1
+;; 	ADC lvl_1bg_ptr+1
+;; 	STA Pointer+1
+;; 	;; get tile
+	;; LDA (Pointer), y
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerUpDone	
@@ -200,7 +226,7 @@ WalkDownDone:
 	ADC #$08
 	STA temp_player_y_move
 
-	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerDownDone
@@ -277,7 +303,7 @@ WalkRightDone:
 	STA temp_player_x_move
 
 	
-	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerRightDone
@@ -356,7 +382,7 @@ WalkLeftDone:
 	SBC #$08
 	STA temp_player_x_move
 
-	TileTranslate H, L, temp_player_y_move, temp_player_x_move, background_lvl_1_1
+	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerLeftDone
@@ -448,11 +474,13 @@ PunchLeft:
 	JMP PunchDone
 
 PunchRight:
+	LDA #$00
+	STA playerax_r+2
 	LDA #$07
 	STA $0201
 	LDA #$17
 	STA playerax_r+1
-
+	JSR chop
 PunchDone:
 	
 
