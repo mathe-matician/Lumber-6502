@@ -119,31 +119,7 @@ WalkUpDone:
 
 	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 
-;; 	LDX temp_player_y_move
-;; 	LDA temp_player_x_move
-;; GetTile:
-;; 	;; divide the X coordinate by 8
-;; 	LSR
-;; 	LSR
-;; 	LSR
-;; 	TAY
-;; 	;; simulate a division by 8 followed by a multiplication by 32 of the Y cooridinate
-;; 	LDA #$00
-;; 	STA Pointer+1
-;; 	TXA
-;; 	AND #%11111000
-;; 	ASL
-;; 	ROL Pointer+1
-;; 	ASL
-;; 	ROL Pointer+1
-;; 	;; add the result to the base address of the NT
-;; 	ADC lvl_1bg_ptr+0
-;; 	STA Pointer+0
-;; 	LDA Pointer+1
-;; 	ADC lvl_1bg_ptr+1
-;; 	STA Pointer+1
-;; 	;; get tile
-	;; LDA (Pointer), y
+
 	STA fake_player
 	CMP #$04
 	BEQ MovePlayerUpDone	
@@ -432,7 +408,7 @@ MovePlayerLeftDone:
 PlayerPunch:
 	LDA buttons1
 	AND #%01000000		;B button for bashin'
-	BEQ PunchDone
+	BEQ PuncherDone
 
 	LDA playerfacing
 	AND #%00001000
@@ -444,19 +420,26 @@ PlayerPunch:
 	
 	LDA playerfacing
 	AND #%00000010
-	BNE PunchLeft
+	BNE PuncherLeft
 
 	LDA playerfacing
 	AND #%00000001
-	BNE PunchRight
+	BNE PuncherRight
 	
 	JMP ControlsDone
+PuncherDone:
+	JMP PunchDone
+PuncherRight:
+	JMP PunchRight
+PuncherLeft:
+	JMP PunchLeft
 	
 PunchUp:
 	LDA #$0A
 	STA $0201
 	LDA #$1A
 	STA playerax_u+1
+	Chop playerax_u, playerax_u+3, GetTile, S, Z, offset
 	JMP PunchDone
 
 PunchDown:
@@ -464,6 +447,7 @@ PunchDown:
 	STA $0201
 	LDA #$19
 	STA playerax_d+1
+	Chop playerax_d, playerax_d+3, GetTile, S, Z, offset
 	JMP PunchDone
 
 PunchLeft:
@@ -471,6 +455,7 @@ PunchLeft:
 	STA $0201
 	LDA #$18
 	STA playerax_l+1
+	Chop playerax_l, playerax_l+3, GetTile, S, Z, offset
 	JMP PunchDone
 
 PunchRight:
@@ -480,7 +465,7 @@ PunchRight:
 	STA $0201
 	LDA #$17
 	STA playerax_r+1
-	JSR chop
+	Chop playerax_r, playerax_r+3, GetTile, S, Z, offset
 PunchDone:
 	
 

@@ -103,7 +103,13 @@ Pointer			= $3C
 	;; 		= $3D
 bg_ptr			= $0600
 Point			= $45
-PRGROM			= $6000	
+PRGROM			= $6000	;where tile map is stored
+VRAMADDR		= $47
+tilenum			= $49
+VRAM_LO			= $4A
+VRAM_HI			= $4B
+VRAM			= $2000
+offset			= $4C	
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -448,7 +454,7 @@ NMI:
 NeedDraw:
 	LDA draw_flags
 	AND #%00000010
-	CMP #$00
+	;; CMP #$00
 	BEQ NeedPpuReg
 	BIT $2002
 	JSR DoDrawing
@@ -491,7 +497,13 @@ PpuScroll:
 
 DoDrawing:
 
-	;; .include "levels.asm"
+	;; LDA $2002
+	;; LDA #$21
+	;; STA $2006
+	;; LDA #$F0
+	;; STA $2006
+	;; LDA #$00
+	;; STA $2007
 
 DoDrawingDone:	
 	RTS
@@ -516,8 +528,7 @@ ReadController1Loop:
 	BNE ReadController1Loop
 	RTS
 
-	;; .include "controls.asm"
-	.include "chop.asm"
+	.include "gettile.asm"
 	.include "colorbuffers.asm"
 	.include "levelbuffers.asm"
 
