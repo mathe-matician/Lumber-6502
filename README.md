@@ -21,6 +21,7 @@ ________________________________________________________________________________
 - Enemies
   - New roam routines
   - Enemy attack/destroy trees
+- Audio
 
 ![](Lumber/titlescreen.png)
 
