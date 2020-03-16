@@ -109,7 +109,9 @@ tilenum			= $49
 VRAM_LO			= $4A
 VRAM_HI			= $4B
 VRAM			= $2000
-offset			= $4C	
+offset			= $4C
+prev_button		= $4D
+new_button		= $4E	
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -511,10 +513,12 @@ DoDrawingDone:
 UpdateController:
 	
 	;; .include "lvl1enemy.asm"
-	
-	.include "controls.asm"	
+	.include "controls.asm"
+	.include "player_action.asm"
 	;; JSR Control_State
-	
+
+	LDA buttons1
+	STA prev_button
 	LDA #$01
 	STA $4016
 	LDA #$00
@@ -526,7 +530,16 @@ ReadController1Loop:
 	ROL buttons1     ; bit0 <- Carry
 	DEX
 	BNE ReadController1Loop
+
+	LDA prev_button
+	EOR #$FF		;bitwise NOT
+	AND buttons1
+	STA new_button
+	
 	RTS
+
+
+	;; .include "actions.asm"
 
 	.include "gettile.asm"
 	.include "colorbuffers.asm"
