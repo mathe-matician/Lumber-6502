@@ -2,11 +2,6 @@
 ### Cut Trees, Grow Your Beard, Fight Aliens
 
 **Roadmap:**
-- Chop/attack
-  - ~~logic needs to update PPU to destroy trees~~
-  - ~~applied to all player sides~~
-  - ~~add macro for chop or rework TileTranslate macro~~
-  - ~~Attack logic rework to activate once/button press~~
 - RLE background decompression needs to work with new bg memory location
 - Gameover Logic
   - Screen and restart
