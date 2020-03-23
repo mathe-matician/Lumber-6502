@@ -103,6 +103,7 @@ Pointer			= $3C
 	;; 		= $3D
 bg_ptr			= $0600
 Point			= $45
+	;; 		= $46
 PRGROM			= $6000	;where tile map is stored
 VRAMADDR		= $47
 tilenum			= $49
@@ -111,7 +112,12 @@ VRAM_HI			= $4B
 VRAM			= $2000
 offset			= $4C
 prev_button		= $4D
-new_button		= $4E	
+new_button		= $4E
+seed2			= $4F
+	;; 		= $50
+enemy_num		= $51
+BG_256			= $52
+BGCount			= $53	
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -241,8 +247,7 @@ StartScreen:
 
 	.include "lvl_1_init.asm"
 Load_Lvl1:	
-	.include "lvl_1.asm"
-
+	.include "prng_map.asm"
 GameEngineRunning:
 
 	LDA #$CC
@@ -286,143 +291,6 @@ ForeverLoop:
 GameOver:
 	.include "gameover.asm"
 	JMP GameOver
-
-To_Npc1:
-	JSR Lvl1_npc_text1
-
-	JMP Forever
-	
-Npc_Check1:	
-	LDA #$00
-	STA lvl1_npc_flags
-	JMP Load_Lvl1
-	
-Npc_Check_Done:	
-	JMP Forever
-
-;; Lvl1_npc2_text1:
-;; 	;; JMP Load_Lvl1 		;temp fix
-
-;; Lvl1_npc2_text1_loop:
-
-;; 	LDA $2002
-;; 	LDA #$21
-;; 	Sta $2006
-;; 	LDA #$00
-;; 	STA $2006
-	
-;; Lop:	
-;; 	LDA #$00, Y
-;; 	STA $2007
-;; 	INY
-;; 	INX
-;; 	CPX #$00
-;; 	BNE Lop
-
-;; 	LDA #%00001110
-;; 	STA $2001
-;; 	RTS			;DONT NEED RTS - take out when fixed
-
-	
-Lvl1_npc_text1:
-
-;; 	LDA lvl1_npc_flags
-;; 	AND #%00000011
-;; 	CMP #%00000011
-;; 	BNE Npc1_Load_Text
-
-;; 	LDA #$00
-;; 	STA lvl1_npc_flags
-	
-;; 	JMP Load_Lvl1
-
-;; Npc1_Load_Text:	
-	BIT $2002
-	BPL Lvl1_npc_text1
-
-	;; LDA #%00000100
-	;; STA STATE
-	
-	LDA #%00000000
-	STA $2001
-	
-	LDA $2002
-	LDA #$20
-	STA $2006
-	LDA #$00
-	STA $2006
-
-	LDX #$00
-	LDY #$00
-Npc1_text1:	
-	LDA Lvl_1_npc_1_1, Y
-	STA $2007
-	Iny
-	INX
-	CPX #$00
-	BNE Npc1_text1
-
-	LDA $2002
-	LDA #$21
-	STA $2006
-	LDA #$00
-	STA $2006
-	
-	LDX #$00
-	LDY #$00
-Npc1_text1_1:
-	LDA Lvl_1_npc_1_2, Y
-	STA $2007
-	INY
-	INX
-	CPX #$00
-	BNE Npc1_text1_1
-
-	LDA $2002
-	LDA #$22
-	STA $2006
-	LDA #$00
-	STA $2006
-
-	LDX #$00
-	LDY #$00
-Npc1_text1_2:
-	LDA Lvl_1_npc_1_3, Y
-	STA $2007
-	INY
-	INX
-	CPX #$00
-	BNE Npc1_text1_2
-
-	LDA $2002
-	LDA #$23
-	STA $2006
-	LDA #$00
-	STA $2006
-
-	LDX #$00
-	LDY #$00
-Npc1_text1_3:
-	LDA Lvl_1_npc_1_4, Y
-	STA $2007
-	INY
-	INX
-	CPX #$00
-	BNE Npc1_text1_3
-
-	LDA #$00
-	STA lvl1_npc_flags
-	LDA #%00000010
-	STA lvl1_npc_flags
-
-	LDA #$00
-	STA sevenblock
-
-	LDA #%00001110
-	STA $2001
-
-Lvl1_npc1_done:	
-	RTS
 	
 WaitFrame:
 	;; LDA #%00000000
@@ -512,10 +380,8 @@ DoDrawingDone:
 	
 UpdateController:
 	
-	;; .include "lvl1enemy.asm"
 	.include "controls.asm"
 	.include "player_action.asm"
-	;; JSR Control_State
 
 	LDA buttons1
 	STA prev_button
@@ -537,9 +403,6 @@ ReadController1Loop:
 	STA new_button
 	
 	RTS
-
-
-	;; .include "actions.asm"
 
 	.include "gettile.asm"
 	.include "colorbuffers.asm"
