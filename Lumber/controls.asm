@@ -54,7 +54,12 @@ Gameover_Controls:
 	
 	JMP RESET		; goes to blank screen
 
-Start_Controls:	
+Start_Controls:
+	LDA seed2
+	CLC
+	ADC #$01
+	STA seed2
+	STA seed2+1
 	LDA buttons1
 	AND #%00010000
 	BEQ Start_ControlsDone
@@ -121,8 +126,8 @@ WalkUpDone:
 
 
 	STA fake_player
-	CMP #$04
-	BEQ MovePlayerUpDone	
+	CMP #$00
+	BNE MovePlayerUpDone	
 	LDA fake_player
 	CMP #$07
 	BEQ SevenBlockUp
@@ -204,8 +209,8 @@ WalkDownDone:
 
 	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 	STA fake_player
-	CMP #$04
-	BEQ MovePlayerDownDone
+	CMP #$00
+	BNE MovePlayerDownDone
 
 	;; move player down if no collision
 	LDA shadow_oam
@@ -281,8 +286,8 @@ WalkRightDone:
 	
 	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 	STA fake_player
-	CMP #$04
-	BEQ MovePlayerRightDone
+	CMP #$00
+	BNE MovePlayerRightDone
 
 	;; move player right if no collision
 	LDA $0203
@@ -360,8 +365,8 @@ WalkLeftDone:
 
 	TileTranslate H, L, temp_player_y_move, temp_player_x_move, PRGROM
 	STA fake_player
-	CMP #$04
-	BEQ MovePlayerLeftDone
+	CMP #$00
+	BNE MovePlayerLeftDone
 	CMP #$07
 	BEQ SevenBlockLeft
 
