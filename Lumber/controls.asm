@@ -59,6 +59,9 @@ Start_Controls:
 	CLC
 	ADC #$01
 	STA seed2
+	LDA seed2+1
+	CLC
+	ADC #$03
 	STA seed2+1
 	LDA buttons1
 	AND #%00010000

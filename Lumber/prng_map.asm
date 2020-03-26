@@ -1,11 +1,11 @@
-vblankwait2:   
-	BIT $2002
-	BPL vblankwait2
+;; vblankwait2:   
+;; 	BIT $2002
+;; 	BPL vblankwait2
 
-	LDA #%10010000
-	STA $2000
-	LDA #$00
-	STA $2001
+;; 	LDA #%10010000
+;; 	STA $2000
+;; 	LDA #$00
+;; 	STA $2001
 
 ;; 	LDA #$00
 ;; 	STA BG256
@@ -57,81 +57,98 @@ vblankwait2:
 ;; 	JMP PRNG_MAP
 ;; BGDone:
 ;;//////////////////////////////////////////////////
-	LDA #$00
-	STA Point+0
-	STA Point+1
-BGTORAM:
-	;; put the map index  in register A 
-	LDA $0000	     ;might need to be just zero
-	;; multiply index by 2, since it is 16bit
-	ASL
-	TAY
+;; 	LDA #$00
+;; 	STA Point+0
+;; 	STA Point+1
+;; BGTORAM:
+;; 	LDA $0000	
+;; 	ASL
+;; 	TAY
 
-	LDA bg_point_ram+0,y
-	STA Point+0
-	LDA bg_point_ram+1,y
-	STA Point+1
-	;; copy 1024 bytes from the location indicated by the pointer to VRAM
-	LDA #$04
-	STA BG256
-	LDX #$00
-	LDY #$00
-	TYA
-	PHA
-PRNG_MAP:	
-	LDY #$08		;iteration count (generates 8 bits)
-	LDA seed2+0
-One:
-	ASL
-	ROL seed2+1
-	BCC Two
-	EOR #$39		;apply XOR feedback whenever a 1 bit is shifted out
-Two:
-	DEY
-	BNE One
-	STA seed2+0
-	CMP #$00		;reload flags
+;; 	LDA bg_point_ram+0,y
+;; 	STA Point+0
+;; 	LDA bg_point_ram+1,y
+;; 	STA Point+1
 
-	LDA seed2
-	CMP #$0C
-	BCC LoadRock		; if seed2 < 12:
-	CMP #$25
-	BCC LoadTree		;if seed2 < 37 and it is greater than 12
-	CMP #$CF
-	BCC LoadGrass		;if seed2 < 207 and is greater than 37
-	CMP #$FF
-	BCC LoadTree		;if seed2 < 255 and is greater than 207
-	JMP BGDone
-LoadRock:
-	PLA
-	TAY
-	LDA #$3B
-	STA (Point), y
-	JMP LoadCycle
-LoadGrass:
-	PLA
-	TAY
-	LDA #$00
-	STA (Point), y
-	JMP LoadCycle
-LoadTree:
-	PLA
-	TAY
-	LDA #$04
-	STA (Point), y
-LoadCycle:
-	INY
-	TYA
-	PHA
-	INX
-	BNE PRNG_MAP
-	INC Point+1
-	LDA BG256
-	SEC
-	SBC #$01
-	STA BG256
-	BNE PRNG_MAP
-BGDone:	
+;; 	LDA #$04
+;; 	STA BG256
+;; 	LDX #$04
+;; 	LDA #$00
+;; 	STA BGCount
+;; 	LDY #$00
+;; 	TYA
+;; 	PHA
+;; PRNG_MAP:	
+;; 	LDY #$08	
+;; 	LDA seed2+0
+;; One:
+;; 	ASL
+;; 	ROL seed2+1
+;; 	BCC Two
+;; 	EOR #$39	
+;; Two:	
+;; 	DEY
+;; 	BNE One
+;; 	STA seed2+0
+;; 	CMP #$00		;reload flags
+
+;; 	LDA seed2
+;; 	CMP #$0C
+;; 	BCC LoadRock		; if seed2 < 12:
+;; 	CMP #$25
+;; 	BCC LoadTree		;if seed2 < 37 and it is greater than 12
+;; 	CMP #$CF
+;; 	BCC LoadGrass		;if seed2 < 207 and is greater than 37
+;; 	CMP #$FF
+;; 	BCC LoadTree		;if seed2 < 255 and is greater than 207
+;; 	LDA #$04
+;; 	STA (Point), y
+	
+;; 	JMP BGDone
+;; LoadRock:
+;; 	PLA
+;; 	TAY
+;; 	LDA #$3B
+;; 	STA (Point), y
+;; 	INY
+;; 	TYA
+;; 	PHA
+;; 	JMP LoadCycle
+;; LoadGrass:
+;; 	PLA
+;; 	TAY
+;; 	LDA #$00
+;; 	STA (Point), y
+;; 	INY
+;; 	TYA
+;; 	PHA
+;; 	JMP LoadCycle
+;; LoadTree:
+;; 	PLA
+;; 	TAY
+;; 	LDA #$04
+;; 	STA (Point), y
+;; 	INY
+;; 	TYA
+;; 	PHA
+;; LoadCycle:
+;; 	;; INY
+;; 	;; TYA
+;; 	;; PHA
+;; 	;; INX
+;; 	LDA BGCount
+;; 	CLC
+;; 	ADC #$01
+;; 	STA BGCount
+;; 	BNE PRNG_MAP
+;; 	INC Point+1
+;; 	DEX
+;; 	;; LDA BG256
+;; 	;; SEC
+;; 	;; SBC #$01
+;; 	;; STA BG256
+;; 	BNE PRNG_MAP
+;; BGDone:	
 
 ;; bbbCBLoop:	
 ;; 	LDA (Point), y
@@ -147,7 +164,16 @@ BGDone:
 ;; 	SBC #$01
 ;; 	STA BG256
 ;; 	BNE bbbCopyByte
-;;/////////////////////////////////////////////////
+	;;/////////////////////////////////////////////////
+	
+vblankwait6:	
+	BIT $2002
+	BPL vblankwait6
+
+	LDA #%10010000
+	STA $2000
+	LDA #$00
+	STA $2001
 LoadBackground:
 	LDA $2002            
 	LDA #$20
@@ -165,9 +191,9 @@ LoadBackground:
 	;; LDA lvl_1bg_ptr+1, y
 	;; STA Pointer+1
 
-	LDA bg_point_ram+0, y
+	LDA bg_point+0, y
 	STA Pointer+0
-	LDA bg_point_ram+1, y
+	LDA bg_point+1, y
 	STA Pointer+1
 	;; copy 1024 bytes from the location indicated by the pointer to VRAM
 	LDA #$04

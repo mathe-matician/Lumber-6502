@@ -105,6 +105,9 @@ bg_ptr			= $0600
 Point			= $45
 	;; 		= $46
 PRGROM			= $6000	;where tile map is stored
+PRGROM1			= $6100
+PRGROM2			= $6200
+PRGROM3			= $6300	
 VRAMADDR		= $47
 tilenum			= $49
 VRAM_LO			= $4A
@@ -117,7 +120,8 @@ seed2			= $4F
 	;; 		= $50
 enemy_num		= $51
 BG_256			= $52
-BGCount			= $53	
+BGCount			= $53
+PRGtest			= $54	
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -244,9 +248,9 @@ StartScreen:
 	LDA STATE
 	AND #%00000001
 	BEQ @StartLoop
-
+	.include "maptorom.asm"
 	.include "lvl_1_init.asm"
-Load_Lvl1:	
+Load_Lvl1:
 	.include "prng_map.asm"
 GameEngineRunning:
 

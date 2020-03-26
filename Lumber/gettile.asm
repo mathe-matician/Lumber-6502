@@ -17,20 +17,23 @@ GetTile:
 	asl
 	rol S+1
 	;add the result to the base address of the NT
-	adc bg_point_ram+0
+	adc bg_point+0
 	sta S+0
 	lda S+1
-	adc bg_point_ram+1
+	adc bg_point+1
 	sta S+1
 	
-	;get the tile - CAN TAKE OUT AND HAVE THE TWO LINES BELOW
+	;get the tile
 	lda (S), y
+	;; CMP #$04
+	;; BNE GetTileDone
 
 	;; zeros out tile in PRGROM ($6000) logically you can now walk through spaces that have been chopped
 	LDA #$00
 	STA (S), Y
 	STA Z
 	STA offset
+GetTileDone:	
 
 ;;; ;;;;;;;;;;;;;;;;;;;;
 	;; LDA playerax_r+3	;x coordinate
