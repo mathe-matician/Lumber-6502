@@ -5,7 +5,7 @@
 - Gameover Logic
   - Screen and restart
 - Objects/Graphics
-- ~~Add rock object~~
+  - ~~Add rock object~~
   - Different types of enemies
 - Object Collection routine
   - scoring system
