@@ -7,7 +7,6 @@
 - Objects/Graphics
 - ~~Add rock object~~
   - Different types of enemies
-______________________________________________________________________________________________________________________________________________
 - Object Collection routine
   - scoring system
 - ~~Random background genereation~~
