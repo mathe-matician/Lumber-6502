@@ -279,22 +279,16 @@ GameEngineRunning:
 	
 Forever:
 
-	;; PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3
-	
-ForeverLoop:	
-	;; LDA lvl1_npc_flags
-	;; AND #%00000001
-	;; BNE To_Npc1
-
-	;; LDA lvl1_npc_flags
-	;; AND #%00000100
-	;; BNE Npc_Check1	
+	PlayerDeathCheck Lvl1_En1_Loc, Lvl1_En1_Loc+3, shadow_oam, shadow_oam+3, STATE	
 	
 	JMP Forever
 
 GameOver:
-	.include "gameover.asm"
+	;; don't need no game over logic
 	JMP GameOver
+
+LoadGameOverScreen:
+	.include "gameover.asm"
 	
 WaitFrame:
 	;; LDA #%00000000

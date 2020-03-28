@@ -41,9 +41,9 @@
 	MACRO Chop ax_y, ax_x, function, ptr1, ptr2, offset
 		LDA ax_x
 		LDX ax_y
-		JSR function
-		;; CMP #$04
-		;; BNE ChopDone
+	JSR function
+	CMP #$3B
+	BEQ ChopDone
 		LDA ax_x	;x coordinate
 		LDX ax_y	;y coordinate
 	;; divide x coordinate by 8 and store x-offset in variable
@@ -86,19 +86,44 @@
 ChopDone:
 	ENDM
 
-	MACRO PlayerDeathCheck enemyy, enemyx, playery, playerx
-		LDA enemyy
+	MACRO PlayerDeathCheck enemyy, enemyx, playery, playerx, state
+
+		LDX #$04
+		LDY #$00
+En_Y_Check:	
+		LDA Lvl1_En1_Loc, y
 		CMP playery
-		BNE DeathCheckDone
-		
-		LDA enemyx
+		BEQ En_Y_Check_Done
+		INY
+		INY
+		INY
+		INY
+		DEX
+		BNE En_Y_Check
+		JMP DeathCheckDone
+En_Y_Check_Done:
+		LDX #$04
+		LDY #$00
+En_X_Check:	
+		LDA Lvl1_En1_Loc+3, y
 		CMP playerx
-		BNE DeathCheckDone
-		
+		BEQ En_X_Check_Done
+		INY
+		INY
+		INY
+		INY
+		DEX
+		BNE En_X_Check
+		JMP DeathCheckDone
+En_X_Check_Done:	
 		LDA #$03
 		STA shadow_oam+2
+		LDA #$00	;could just load into the start control
+		STA state	;STATE
 		LDA #%00000010
-		STA STATE
+		STA state	;STATE
+		JSR LoadGameOverScreen
+		JMP GameOver
 DeathCheckDone:		
 	ENDM
 
