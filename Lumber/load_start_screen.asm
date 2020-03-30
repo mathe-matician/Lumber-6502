@@ -2,7 +2,7 @@ vblankwait3:
 	BIT $2002
 	BPL vblankwait3
 
-LoadStartScreen1:
+LoadStartScreen:
 	LDA $2002
 	LDA #$20
 	STA $2006
@@ -12,14 +12,14 @@ LoadStartScreen1:
 	LDX #$00
 	;; LDY #$00
 
-LoadStartScreenLoop1:
+@Loop1:				;just testing local labels
 	;; LDA #$00, Y
 	LDA #$00
 	STA $2007
 	;; INY
 	INX
 	CPX #$00
-	BNE LoadStartScreenLoop1
+	BNE @Loop1
 
 LoadStartScreen2:
 	LDA $2002

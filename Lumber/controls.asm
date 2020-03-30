@@ -1,6 +1,5 @@
 Control_State:	
 	LDA STATE
-	CMP #$00
 	BEQ Start_Controls
 	LDA STATE
 	AND #%00000001
@@ -8,52 +7,15 @@ Control_State:
 	LDA STATE
 	AND #%00000010
 	BNE Gameover_Controls
-	;; LDA STATE
-	;; AND #%00000100
-	;; BNE Text_Controls
 
-	;; RTS
 	JMP ControlsDone
 
 	;; Set up Jump table instead of branches
 
-;; Text_Controls:
-;; 	LDA buttons1
-;; 	AND #%10000000
-;; 	BEQ TextControlsDone	;could change to RTS
-
-;; 	LDA lvl1_npc_flags
-;; 	AND #%00000010
-;; 	BEQ TextControlsDone	;could change to RTS
-
-;; 	LDA #%00000100
-;; 	STA lvl1_npc_flags
-	
-;; 	LDA #%00011110
-;; 	STA $2001
-
-;; 	LDA #$00
-;; 	STA FrameCounter1
-;; 	STA STATE
-;; 	LDA #%00000001
-;; 	STA STATE
-	
-TextControlsDone:
-	;; RTS 			;should go back to UpdateController
-	JMP ControlsDone
-
 Gameover_Controls:
-	LDA buttons1
-	AND #%00010000
-	BEQ Start_ControlsDone
 
-	LDA #%00010000
-	STA $2000
-	LDA #$00
-	STA $2001
+	JMP Start_ControlsDone
 	
-	JMP RESET		; goes to blank screen
-
 Start_Controls:
 	LDA seed2
 	CLC

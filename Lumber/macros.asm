@@ -87,11 +87,10 @@ ChopDone:
 	ENDM
 
 	MACRO PlayerDeathCheck enemyy, enemyx, playery, playerx, state
-
 		LDX #$04
 		LDY #$00
 En_Y_Check:	
-		LDA Lvl1_En1_Loc, y
+		LDA En1_LocY, y
 		CMP playery
 		BEQ En_Y_Check_Done
 		INY
@@ -105,7 +104,7 @@ En_Y_Check_Done:
 		LDX #$04
 		LDY #$00
 En_X_Check:	
-		LDA Lvl1_En1_Loc+3, y
+		LDA En1_LocX, y
 		CMP playerx
 		BEQ En_X_Check_Done
 		INY

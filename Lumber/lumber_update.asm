@@ -58,16 +58,37 @@ zm_Regs			= $25
 Z			= zm_Regs
 M			= zm_Regs+1	
 
-Lvl1_En1_Loc		= $021C
-Lvl1_En2_Loc		= $0220
-Lvl1_En3_Loc		= $0224
-Lvl1_En4_Loc		= $0228	
+En1_LocY		= $0214
+En2_LocY		= $0218
+En3_LocY		= $021C
+En4_LocY		= $0220
+En5_LocY		= $0224
+En6_LocY		= $0228
+En7_LocY		= $022C
+En8_LocY		= $0230
+En9_LocY		= $0234
+En10_LocY		= $0238
+En11_LocY		= $023C
+En12_LocY		= $0240	
+
+En1_LocX		= En1_LocY+3
+En2_LocX		= En2_LocY+3
+En3_LocX		= En3_LocY+3
+En4_LocX		= En4_LocY+3
+En5_LocX		= En5_LocY+3
+En6_LocX		= En6_LocY+3
+En7_LocX		= En7_LocY+3	
+En8_LocX		= En8_LocY+3
+En9_LocX		= En9_LocY+3
+En10_LocX		= En10_LocY+3
+En11_LocX		= En11_LocY+3	
+En12_LocX		= En12_LocY+3	
 
 shadow_oam		= $0200
-playerax_r		= $022C
-playerax_l		= $0230
-playerax_u		= $0234
-playerax_d		= $0238	
+playerax_r		= $0204
+playerax_l		= $0208
+playerax_u		= $020C
+playerax_d		= $0210	
 FrameCounter1		= $0A
 FrameCounter2		= $03
 FrameCounter3		= $05
@@ -121,7 +142,11 @@ seed2			= $4F
 enemy_num		= $51
 BG_256			= $52
 BGCount			= $53
-PRGtest			= $54	
+PRGtest			= $54
+EnPointY		= $55
+	;; 		= $56
+EnPointX		= $57
+	;; 		= $58
 
 ;-----------------------------------------
 ; Audio - Note Variables
@@ -229,9 +254,9 @@ collidebits			.dsb 1
 ;----------------------------------------------------------------
 
 	.base $10000-(PRG_COUNT*$4000)
-
+TheStart:	
 	.include "reset_load.asm"
-	.include "macros.asm"
+	.include "macros.asm"	
 	.include "load_start_screen.asm"
 
 StartScreen:
@@ -284,30 +309,20 @@ Forever:
 	JMP Forever
 
 GameOver:
-	;; don't need no game over logic
-	JMP GameOver
+	LDA FrameCounter1
+	CMP #$88
+	BNE GameOver
+	LDA #%00000000
+	STA $2001
+	JMP TheStart
 
 LoadGameOverScreen:
 	.include "gameover.asm"
 	
 WaitFrame:
-	;; LDA #%00000000
-	;; BIT $2002
-	;; BPL WaitFrame
-	;; RTS
-;; 	inc sleeping
-;; loop:
-;; 	lda sleeping
-;; 	bne loop
-;; 	rts
 
 DoFrame:
-	;; bit flags instead of variables?
-	;; LDA #%00000110 ;NeedPpuReg
-	;; STA draw_flags
-	;; jsr WaitFrame
-	;; jsr UpdateJoypadData
-	;; RTS
+
 ;---------------------------------------
 ; NMI
 ;---------------------------------------
@@ -365,13 +380,6 @@ PpuScroll:
 
 DoDrawing:
 
-	;; LDA $2002
-	;; LDA #$21
-	;; STA $2006
-	;; LDA #$F0
-	;; STA $2006
-	;; LDA #$00
-	;; STA $2007
 
 DoDrawingDone:	
 	RTS
