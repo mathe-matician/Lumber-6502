@@ -34,7 +34,7 @@ Forever:
 
 	JMP Forever
 
-	.include "deathcheck.asm"
+	.include "game/deathcheck.asm"
 	
 GameOver:
 	LDA FrameCounter1
