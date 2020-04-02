@@ -65,8 +65,8 @@ DoDrawingDone:
 	
 UpdateController:
 	
-	.include "controls.asm"
-	.include "player_action.asm"
+	.include "game/controls.asm"
+	.include "game/player_action.asm"
 
 	LDA buttons1
 	STA prev_button
