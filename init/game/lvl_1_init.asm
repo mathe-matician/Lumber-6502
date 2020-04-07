@@ -4,6 +4,8 @@
 	LDA #$00
 	STA fake_player
 	STA lvl1_npc_flags
+	STA enemy_num_tablecheck+0
+	STA enemy_num_tablecheck+1
 	LDA #%00001000
 
 	LDX #$04
@@ -53,40 +55,59 @@ LoadAx:
 	BCC Load10En
 	CMP #$FE
 	BCC Load12En
+		;; LDX #$10 - put in below - possibly won't need
+	;; JMP Load4Ens
+Load4Ens:
+	LDA #$04
+	STA enemy_num
 	LDX #$10
 	JMP LoadEns
 Load5En:
 	LDA #$05
 	STA enemy_num
+	LDA #$01
+	STA enemy_num_tablecheck
 	LDX #$14
 	JMP LoadEns
 Load6En:
 	LDA #$06
 	STA enemy_num
+	LDA #$02
+	STA enemy_num_tablecheck
 	LDX #$18
 	JMP LoadEns
 Load7En:
 	LDA #$07
 	STA enemy_num
+	LDA #$03
+	STA enemy_num_tablecheck
 	LDX #$1C
 	JMP LoadEns
 Load8En:
 	LDA #$08
 	STA enemy_num
+	LDA #$04
+	STA enemy_num_tablecheck
 	LDX #$20
 	JMP LoadEns
 Load10En:
 	LDA #$0A
 	STA enemy_num
+	LDA #$05
+	STA enemy_num_tablecheck
 	LDX #$28
 	JMP LoadEns
 Load12En:
 	LDA #$0C
 	STA enemy_num
+	LDA #$06
+	STA enemy_num_tablecheck
 	LDX #$30
-
-LoadEns:
-	LDY #$00
+LoadEns
+	;; LDA #$00
+	;; STA enemy_num_tablecheck+0
+	;; STA enemy_num_tablecheck+1
+	TAY
 LoadENS_lvl_1:
 	LDA level_1_enemy1, y	;starting at $0214
 	STA En1_LocY, y

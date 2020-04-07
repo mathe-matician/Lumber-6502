@@ -85,52 +85,6 @@
 	
 ChopDone:
 	ENDM
-	
-;; 	MACRO PlayerDeathCheck1 playery, playerx, state
-;; 	LDA #$00
-;; 	STA EnPointY+0
-;; 	STA EnPointY+1
-;; 	STA EnPointX+0
-;; 	STA EnPointX+1
-
-;; 	LDA $0000
-;; 	ASL
-;; 	TAY
-;; 	LDA En_Y1+0, y
-;; 	STA EnPointY+0
-;; 	LDA En_Y1+1, y
-;; 	STA EnPointY+1
-
-;; 	LDA $0000
-;; 	ASL
-;; 	TAY
-;; 	LDA En_X1+0, y
-;; 	STA EnPointX+0
-;; 	LDA En_X1+1, y
-;; 	STA EnPointX+1
-	
-;; En_Loc_Check1:	
-;; 	LDA (EnPointY), y
-;; 	CMP playery
-;; 	BNE En_Loc_Check_Done1
-;; 	LDA (EnPointX), y
-;; 	CMP playerx
-;; 	BNE DeathCheckDone
-;; 	JMP En_Hit
-;; En_Loc_Check_Done1:
-;; 	INY
-;; 	JMP En_Loc_Check1
-;; En_Hit:	
-;; 		LDA #$03
-;; 		STA shadow_oam+2
-;; 		LDA #$00	;could just load into the start control
-;; 		STA state	;STATE
-;; 		LDA #%00000010
-;; 		STA state	;STATE
-;; 		JSR LoadGameOverScreen
-;; 		JMP GameOver
-;; DeathCheckDone:		
-;; 	ENDM
 
 	MACRO PRNG S1
 		LDY #$08		;iteration count (generates 8 bits)
