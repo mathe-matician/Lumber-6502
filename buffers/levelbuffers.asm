@@ -14,15 +14,20 @@ level_1_enemy1:
 	.db $C8,$15,$03,$E0	;$021C - Enemy3
 	.db $50,$15,$03,$B8	;$0220 - Enemy4
 	
-	.db $18,$15,$03,$E0	;$0224 - Enemy5
-	.db $18,$15,$03,$E8	;$0228 - Enemy6
-	.db $20,$15,$03,$E0	;$022C - Enemy7
-	.db $20,$15,$03,$E8	;$0230 - Enemy8
+	.db $80,$15,$03,$90	;$0224 - Enemy5
+	.db $60,$15,$03,$28	;$0228 - Enemy6
+	.db $20,$15,$03,$70	;$022C - Enemy7
+	.db $B0,$15,$03,$88	;$0230 - Enemy8
 	
 	.db $28,$15,$03,$08	;$0234 - Enemy9
 	.db $C0,$15,$03,$B8	;$0238 - Enemy10
 	.db $C8,$15,$03,$20	;$023C - Enemy11
 	.db $50,$15,$03,$A0	;$0240 - Enemy12
+
+	.db $28,$15,$03,$08	;$0244 - Enemy13
+	.db $C0,$15,$03,$B8	;$0248 - Enemy14
+	.db $C8,$15,$03,$20	;$024C - Enemy15
+	.db $50,$15,$03,$A0	;$0250 - Enemy16
 	
 ;; lvl_1_npcs:
 ;; 	.db $A0,$30,$02,$70	;oam $02
@@ -49,17 +54,17 @@ game_over:
 
 En_Y1:
 	.dw En1_LocY
-	;; , En2_LocY, En3_LocY, En4_LocY, En5_LocY, En6_LocY
-	;; , En7_LocY, En8_LocY, En9_LocY, En10_LocY, En11_LocY, En12_LocY
 En_X1:
 	.dw En1_LocX
-	;; , En2_LocX, En3_LocX, En4_LocX, En5_LocX, En6_LocX
-	;; , En7_LocX, En8_LocX, En9_LocX, En10_LocX, En11_LocX, En12_LocX
 
-;; Lvl_1_En1_Y:
-;; 	.db $30,$38,$40,$48,$48,$48,$48,$48,$50,$50,$58,$58,$58,$60,$60,$60,$68,$68,$68,$70,$78
-;; Lvl_1_En1_X:
-;; 	.db $20,$20,$20,$20,$28,$30,$38,$40,$40,$48,$48,$50,$58,$58,$60,$68,$68,$70,$78,$78,$78
+En_Move_RTS_table:
+	.dw four_ens-1
+	.dw five_ens-1
+	.dw six_ens-1
+	.dw seven_ens-1
+	.dw eight_ens-1
+	.dw ten_ens-1
+	.dw twelve_ens-1
 
 note_table:
     .word                                                                $07F1, $0780, $0713 ; A1-B1 ($00-$02)
