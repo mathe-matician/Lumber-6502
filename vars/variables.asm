@@ -66,11 +66,13 @@ En5_LocY		= $0224
 En6_LocY		= $0228
 En7_LocY		= $022C
 En8_LocY		= $0230
-En9_LocY		= $0234
-En10_LocY		= $0238
-En11_LocY		= $023C
-En12_LocY		= $0240	
-
+;; En9_LocY		= $0234
+;; En10_LocY		= $0238
+;; En11_LocY		= $023C
+;; En12_LocY		= $0240	
+En10_LocY		= $0234
+En12_LocY		= $0238	
+	
 En1_LocX		= En1_LocY+3
 En2_LocX		= En2_LocY+3
 En3_LocX		= En3_LocY+3
@@ -79,9 +81,9 @@ En5_LocX		= En5_LocY+3
 En6_LocX		= En6_LocY+3
 En7_LocX		= En7_LocY+3	
 En8_LocX		= En8_LocY+3
-En9_LocX		= En9_LocY+3
+;; En9_LocX		= En9_LocY+3
 En10_LocX		= En10_LocY+3
-En11_LocX		= En11_LocY+3	
+;; En11_LocX		= En11_LocY+3	
 En12_LocX		= En12_LocY+3	
 
 shadow_oam		= $0200
@@ -151,6 +153,11 @@ EnPoint2Y		= $59
 	;; 		= $5A
 EnPoint2X		= $5B
 	;; 		= $5C
+seed3			= $5D
+	;; 		= $5E
+enemy_num_tablecheck	= $5F
+	;; 		= $60
+EnCounter		= $61
 
 ;-----------------------------------------
 ; Audio - Note Variables
