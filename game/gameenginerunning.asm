@@ -5,9 +5,23 @@ GameEngineRunning:
 	STA EnPoint1Y+1
 	STA EnPoint1X+0
 	STA EnPoint1X+1
-	STA seed3+0
-	STA seed3+1
 	STA EnCounter
+	STA EnCounter2
+	STA EnCounter3
+	STA EnBit
+	
+	LDA #$02
+	STA EnCounter_Dec
+	STA EnCounter_Dec2
+	STA EnCounter_Dec3
+
+	LDA #$04
+	STA EnDec
+
+	LDA #$03
+	STA seed3+0
+	LDA #$05
+	STA seed3+1
 
 	LDA #$CC
 	STA hi
@@ -33,10 +47,7 @@ GameEngineRunning:
 	LDA seed+1
 	
 Forever:
-	LDA EnCounter
-	CLC
-	ADC #$01
-	STA EnCounter
+
 	JSR PlayerDeathCheck1
 	JSR Enemy_Movement_Table
 
