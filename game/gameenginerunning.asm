@@ -8,15 +8,21 @@ GameEngineRunning:
 	STA EnCounter
 	STA EnCounter2
 	STA EnCounter3
+	STA EnCounter4
 	STA EnBit
 	
 	LDA #$02
 	STA EnCounter_Dec
 	STA EnCounter_Dec2
 	STA EnCounter_Dec3
+	STA EnCounter_Dec4
 
 	LDA #$04
 	STA EnDec
+	STA EnDownCounter
+	STA EnUpCounter
+	STA EnRightCounter
+	STA EnLeftCounter
 
 	LDA #$03
 	STA seed3+0

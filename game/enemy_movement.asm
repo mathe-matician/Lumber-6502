@@ -15,7 +15,7 @@ Enemy_Movement_Table:
 four_ens:
 	LDA EnBit
 	AND #%00000010
-	BNE BottomWallFlag_Marked
+	BNE BottomWallFlag_Marked ;go up!
 	LDA EnBit
 	AND #%00000100
 	BNE RightWallFlag_Marked
@@ -78,22 +78,32 @@ En1Check:
 	ADC #$08
 	STA temp_en_y_move
 
-	;; TileTranslate Z, M, temp_en_y_move, temp_en_x_move, $6000
 	JSR Tile_Translate
 	CMP #$04
-	BEQ @MetTree
+	BEQ MetTree
 	CMP #$3B
-	BEQ @MetRockShort
+	BEQ MetRockShort
 
 	LDA En1_LocY
 	CLC
 	ADC #$08
 	STA En1_LocY
+
+	LDA EnDownCounter
+	SEC
+	SBC #$01
+	STA EnDownCounter
+	LDA EnDownCounter
+	BEQ TooMuchDown
 	
 	JMP EnMovementDone
-@MetRockShort:
+TooMuchDown:
+	LDA #$04
+	STA EnDownCounter
+	JMP TraverseRight
+MetRockShort:
 	JMP MetRock
-@MetTree:
+MetTree:
 	LDA En1_Tree_Count
 	CLC
 	ADC #$01
@@ -118,7 +128,8 @@ Continue:
 	;; TileTranslate Z, M, temp_en_y_move, temp_en_x_move, $6000
 	JSR Tile_Translate
 	CMP #$04
-	BEQ @MetTree2
+	;; BEQ @MetTree2
+	JSR BreakTree
 	CMP #$3B
 	BEQ @MetRockClose2
 
@@ -156,7 +167,8 @@ Continue:
 	;; TileTranslate Z, M, temp_en_y_move, temp_en_x_move, $6000
 	JSR Tile_Translate
 	CMP #$04
-	BEQ @MetTree3
+	;; BEQ @MetTree3
+	JSR BreakTree
 	CMP #$3B
 	BEQ MetRock
 
@@ -202,11 +214,6 @@ TestTreeBreak:
 	JSR BreakTree
 	JMP TestRock
 En1Done:
-	;; can possibly just use inc En1_Tree_Count
-	;; LDA En1_Tree_Count
-	;; CLC
-	;; ADC #$01
-	;; STA En1_Tree_Count
 
 EnMovementDone:
 	RTS
@@ -337,17 +344,26 @@ InnerLoop:
 	SBC #$08
 	STA En1_LocY
 
+	LDA EnUpCounter
+	SEC
+	SBC #$01
+	STA EnUpCounter
+	LDA EnUpCounter
+	BEQ TraverseLeft
+
 BottomWallDone:
 	rts
-	
-Flip_Bottom_Flag:
-	LDA #$01
+FlipLeftFlagUp:
+	LDA #$04
+	STA EnUpCounter
+	LDA #%00001000
 	STA EnBit
-	rts
+	
 TraverseRight:
+	
 	LDA En1_LocX
 	CMP #RIGHTWALL
-	BEQ DONE
+	BEQ FlipLeftFlag
 	
 	LDA #%00000100
 	STA EnBit
@@ -393,6 +409,12 @@ InnerLoop2:
 	ADC #$08
 	STA En1_LocX
 
+	LDA EnRightCounter
+	SEC
+	SBC #$01
+	STA EnRightCounter
+	BEQ FlipBottomFlag2
+
 	LDA EnDec
 	SEC
 	SBC #$01
@@ -404,6 +426,7 @@ DONE:
 FlipBottomFlag2:	
 	LDA #$04
 	STA EnDec
+	STA EnRightCounter
 	
 	LDA #$01
 	STA EnBit
@@ -415,4 +438,75 @@ FlipLeftFlag:
 	rts
 
 TraverseLeft:
+	LDA #$04
+	STA EnUpCounter
 	
+	LDA En1_LocX
+	CMP #LEFTWALL
+	BEQ TraverseRight
+	
+	LDA #%00001000
+	STA EnBit
+	
+	LDA EnCounter4
+	CLC
+	ADC #$01
+	STA EnCounter4
+	
+	LDA EnCounter4
+	BNE DONE2
+
+	LDA EnCounter_Dec4
+	SEC
+	SBC #$01
+	STA EnCounter_Dec4
+	LDA EnCounter_Dec4
+	BNE DONE2
+InnerLoop3:
+	LDA #$02
+	STA EnCounter_Dec4
+	LDA #$00
+	STA EnCounter4
+	
+	LDA En1_LocY
+	STA temp_en_y_move
+	LDA En1_LocX
+	STA temp_en_x_move
+
+	LDA temp_en_x_move
+	SEC
+	SBC #$08
+	STA temp_en_x_move
+
+	JSR Tile_Translate
+	CMP #$04
+	JSR BreakTree
+	CMP #$3B
+	BEQ FlipBottomFlag3
+	
+	LDA En1_LocX
+	SEC
+	SBC #$08
+	STA En1_LocX
+
+	LDA EnLeftCounter
+	SEC
+	SBC #$01
+	STA EnLeftCounter
+	BEQ FlipBottomFlag3
+
+	LDA EnDec
+	SEC
+	SBC #$01
+	STA EnDec
+	LDA EnDec
+	BEQ FlipBottomFlag3
+DONE2:	
+	rts
+FlipBottomFlag3:
+	LDA #$04
+	STA EnLeftCounter
+	
+	LDA #%00000010
+	STA EnBit
+	rts
