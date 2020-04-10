@@ -1,7 +1,6 @@
 @ECHO OFF
 :: Enter any argument to recompile
-IF "%1"=="" GOTO Run
-ELSE
+IF "%1"=="" GOTO Run ELSE
 :: Recompile main
 asm6 main.asm Lumber.nes
 echo =============
