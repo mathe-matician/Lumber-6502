@@ -166,7 +166,13 @@ EnCounter_Dec		= $68
 EnBit			= $69
 EnCounter_Dec2		= $6A
 EnCounter_Dec3		= $6B
-EnDec			= $6C	
+EnDec			= $6C
+EnDownCounter		= $6D
+EnUpCounter		= $6E
+EnRightCounter		= $6F
+EnLeftCounter		= $70
+EnCounter_Dec4		= $71
+EnCounter4		= $72	
 	
 ;-----------------------------------------
 ; Audio - Note Variables
