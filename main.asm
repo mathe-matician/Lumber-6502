@@ -24,7 +24,6 @@
 	.include "buffers/gettile.asm"
 	.include "buffers/colorbuffers.asm"
 	.include "buffers/levelbuffers.asm"
-	;; .include "game/lvl1enemy.asm"
 	.include "game/enemy_movement.asm"
 	
 	.include "ender/interrupts.asm"
