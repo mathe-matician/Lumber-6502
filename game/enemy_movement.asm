@@ -1,6 +1,4 @@
 
-	;; en 1 dest: y=C8 x=E0
-
 Enemy_Movement_Table:
 	LDA enemy_num_tablecheck
 	ASL
@@ -13,35 +11,53 @@ Enemy_Movement_Table:
 	RTS	;launches our subroutine indexed by enemy_num_tablecheck
 
 four_ens:
+	LDA EnemyTrueFalse
+	BEQ FirstTimeThrough
+
+	LDA EnemyPointY
+	CLC
+	ADC #$04
+	STA EnemyPointY
+
+	LDA EnemyPointX
+	CLC
+	ADC #$04
+	STA EnemyPointX
+
+	LDA EnemyPointY
+	CMP OAM_Num
+	BNE EnStart
+
+FirstTimeThrough:
+	LDY #$00
+	LDA En_Y+0, y
+	STA EnemyPointY+0
+	LDA En_Y+1, y
+	STA EnemyPointY+1
+
+	LDA En_X+0, y
+	STA EnemyPointX+0
+	LDA En_X+1, y
+	STA EnemyPointX+1
+
+	LDA #$01
+	STA EnemyTrueFalse
+	
+EnStart:	
 	LDA EnBit
 	AND #%00000010
 	BNE BottomWallFlag_Marked ;go up!
 	LDA EnBit
 	AND #%00000100
-	BNE RightWallFlag_Marked
+	BNE RightWallFlag_Marked ;go right!
 	LDA EnBit
 	AND #%00001000
-	BNE LeftWallFlag_Marked
-
-	LDA EnCounter
-	CLC
-	ADC #$01
-	STA EnCounter
-	
-	LDA EnCounter
-	BNE DoneEn
-	
-	LDA EnCounter_Dec
-	SEC
-	SBC #$01
-	STA EnCounter_Dec
-	LDA EnCounter_Dec
-	BEQ En1
-DoneEn:
-	JMP EnMovementDone
+	BNE LeftWallFlag_Marked ;go left!
+	;; otherwise go down: EnBit = #$00
+	JMP EnDown
 
 BottomWallFlag_Marked:
-	JSR ReachedBottomWall
+	JSR EnUp
 	JMP EnMovementDone
 RightWallFlag_Marked:
 	JSR TraverseRight
@@ -49,176 +65,60 @@ RightWallFlag_Marked:
 LeftWallFlag_Marked:
 	JSR TraverseLeft
 	JMP EnMovementDone
-
-DoneEn2:
-	Jmp EnMovementDone
-En1:
-	LDA #$03
-	STA EnCounter_Dec
-	LDA #$00
-	STA EnCounter
-	
-	LDA En1_LocY
+EnDown:
+	LDA #%00000000
+	STA EnBit
+;;; store temporary x&y Enemy Location
+	LDY #$00
+	LDA (EnemyPointY), y
 	STA temp_en_y_move
-	LDA En1_LocX
+	LDA (EnemyPointX), y
 	STA temp_en_x_move
 
-Move_En1_Down:
-	LDA En1_LocY
-	CMP #BOTTOMWALL
-	BNE En1Check
-	JMP ReachedBottomWall
-
-En1Check:
-	;; random choice to go down or right - would be en1 dependent and not universal
-	
-	;; check down movment
+;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;; check down movement
 	LDA temp_en_y_move
 	CLC
 	ADC #$08
 	STA temp_en_y_move
-
+	CMP #BOTTOMWALL
+	BNE @GetDownTile
+	JMP EnUp
+@GetDownTile:
 	JSR Tile_Translate
 	CMP #$04
-	BEQ MetTree
-	CMP #$3B
-	BEQ MetRockShort
-
-	LDA En1_LocY
-	CLC
-	ADC #$08
-	STA En1_LocY
-
-	LDA EnDownCounter
-	SEC
-	SBC #$01
-	STA EnDownCounter
-	LDA EnDownCounter
-	BEQ TooMuchDown
-	
+	BNE @CheckRock
+	JSR BreakTree
 	JMP EnMovementDone
-TooMuchDown:
+@CheckRock:
+	CMP #$3B
+	BNE GoingDown
+	JMP TraverseRight
+
+GoingDown:
+	DEC EnDownCounter
+	BNE @Down
 	LDA #$04
 	STA EnDownCounter
 	JMP TraverseRight
-MetRockShort:
-	JMP MetRock
-MetTree:
-	LDA En1_Tree_Count
-	CLC
-	ADC #$01
-	STA En1_Tree_Count
-
-	LDA En1_Tree_Count
-	CMP #$10
-	BNE Continue
-	JSR BreakTree
-	JMP EnMovementDone
-Continue:
-	LDA En1_LocY	
-	STA temp_en_y_move
-	LDA En1_LocX
-	STA temp_en_x_move
-
-	;; check right movement
-	LDA temp_en_x_move
+@Down:
+	;; change to walking down sprite
+	INC EnemyPointY
+	LDY #$00
+	LDA #$15
+	STA (EnemyPointY), y
+	DEC EnemyPointY
+	
+	LDY #$00
+	LDA (EnemyPointY), y
 	CLC
 	ADC #$08
-	STA temp_en_x_move
-	;; TileTranslate Z, M, temp_en_y_move, temp_en_x_move, $6000
-	JSR Tile_Translate
-	CMP #$04
-	;; BEQ @MetTree2
-	JSR BreakTree
-	CMP #$3B
-	BEQ @MetRockClose2
-
-	LDA En1_LocX
-	CLC
-	ADC #$08
-	STA En1_LocX
-	JMP EnMovementDone
-@MetRockClose2:
-	JMP @Continue2
-	JMP MetRock
-@MetTree2:
-	LDA En1_Tree_Count
-	CLC
-	ADC #$01
-	STA En1_Tree_Count
-
-	LDA En1_Tree_Count
-	CMP #$10
-	BNE @Continue2
-	JSR BreakTree
-	JMP EnMovementDone
-@Continue2:
-	
-	LDA En1_LocY
-	STA temp_en_y_move
-	LDA En1_LocX
-	STA temp_en_x_move
-
-	;; check left movement
-	LDA temp_en_x_move
-	SEC
-	SBC #$08
-	STA temp_en_x_move
-	;; TileTranslate Z, M, temp_en_y_move, temp_en_x_move, $6000
-	JSR Tile_Translate
-	CMP #$04
-	;; BEQ @MetTree3
-	JSR BreakTree
-	CMP #$3B
-	BEQ MetRock
-
-	LDA En1_LocX
-	SEC
-	SBC #$08
-	STA En1_LocX
-	JMP EnMovementDone
-
-@MetTree3:
-	LDA En1_Tree_Count
-	CLC
-	ADC #$01
-	STA En1_Tree_Count
-
-	LDA En1_Tree_Count
-	CMP #$10
-	BNE @Continue3
-	JSR BreakTree
-	JMP EnMovementDone
-@Continue3:
-	JSR BreakTree
-	JMP EnMovementDone
-BackUp:
-	JMP En1Check
-	
-MetRock:
-	JMP Continue
-	JMP EnMovementDone
-	
-TestRock:	
-	CMP #$3B
-	BEQ En1Done
-	LDA En1_LocY
-	CLC
-	ADC #$08
-	STA En1_LocY
-	JMP EnMovementDone
-TestTreeBreak:
-	LDA En1_Tree_Count
-	CMP #$10
-	BNE En1Done
-	JSR BreakTree
-	JMP TestRock
-En1Done:
+	STA (EnemyPointY), y
 
 EnMovementDone:
 	RTS
-
-BreakTree:
+	
+BreakTree:	
 	;; Chop temp_en_y_move, temp_en_x_move, GetTile, EnPtr1, EnPtr2, offset
 	LDA temp_en_x_move
 	LDX temp_en_y_move
@@ -266,7 +166,6 @@ vblankwaiter:
 	STA $2007
 	STA $2005
 	STA $2005
-	
 ChopDone1:
 	rts
 
@@ -293,220 +192,162 @@ Tile_Translate:
 
 	rts
 
-ReachedBottomWall:
-	LDA #$02
+EnUp:	
+	LDA #%00000010
 	STA EnBit
-OuterLoop:
-	LDA En1_LocY
+
+	LDY #$00
+	LDA (EnemyPointY), y
 	CMP #TOPWALL
 	BEQ TraverseRight
-	
-	LDA EnCounter2
-	CLC
-	ADC #$01
-	STA EnCounter2
-	
-	LDA EnCounter2
-	BNE BottomWallDone
-
-	LDA EnCounter_Dec2
-	SEC
-	SBC #$01
-	STA EnCounter_Dec2
-	LDA EnCounter_Dec2
-	BNE BottomWallDone
-InnerLoop:
-	LDA #$03
-	STA EnCounter_Dec2
-	LDA #$00
-	STA EnCounter2
-	
-	LDA En1_LocY
+;;; store temporary x&y Enemy location
+	LDY #$00
+	LDA (EnemyPointY), y
 	STA temp_en_y_move
-	LDA En1_LocX
+	LDA (EnemyPointX), y
 	STA temp_en_x_move
-
+;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;; check up movement
 	LDA temp_en_y_move
 	SEC
 	SBC #$08
 	STA temp_en_y_move
 
-	;; TileTranslate Z, M, temp_en_y_move, temp_en_x_move, $6000
+	;; LDA temp_en_y_move
+	CMP #TOPWALL
+	BNE @GetUpTile
+	JMP EnMovementDone
+@GetUpTile:
 	JSR Tile_Translate
 	CMP #$04
+	BNE @CheckRock
 	JSR BreakTree
+	JMP EnMovementDone
+@CheckRock:
 	CMP #$3B
 	BEQ TraverseRight
 
-	;; en goes back up if reached bottom wall
-	LDA En1_LocY
-	SEC
-	SBC #$08
-	STA En1_LocY
-
-	LDA EnUpCounter
-	SEC
-	SBC #$01
-	STA EnUpCounter
-	LDA EnUpCounter
-	BEQ TraverseLeft
-
-BottomWallDone:
-	rts
-FlipLeftFlagUp:
+GoingUp:
+	DEC EnUpCounter
+	BNE @Up
 	LDA #$04
 	STA EnUpCounter
-	LDA #%00001000
-	STA EnBit
+	JMP TraverseLeft
+@Up:
+	;; en goes back up if reached bottom wall
+	INC EnemyPointY
+	LDY #$00
+	LDA #$25
+	STA (EnemyPointY), y
+	DEC EnemyPointY
+	
+	;; LDY #$00
+	LDA (EnemyPointY), y
+	SEC
+	SBC #$08
+	STA (EnemyPointY), y
+
+	RTS
 	
 TraverseRight:
-	
-	LDA En1_LocX
-	CMP #RIGHTWALL
-	BEQ FlipLeftFlag
-	
 	LDA #%00000100
 	STA EnBit
-	
-	LDA EnCounter3
-	CLC
-	ADC #$01
-	STA EnCounter3
-	
-	LDA EnCounter3
-	BNE DONE
-
-	LDA EnCounter_Dec3
-	SEC
-	SBC #$01
-	STA EnCounter_Dec3
-	LDA EnCounter_Dec3
-	BNE DONE
-InnerLoop2:
-	LDA #$02
-	STA EnCounter_Dec3
-	LDA #$00
-	STA EnCounter3
-	
-	LDA En1_LocY
+;;; store temporary x&y Enemy Location
+	LDY #$00
+	LDA (EnemyPointY), y
 	STA temp_en_y_move
-	LDA En1_LocX
+	LDA (EnemyPointX), y
 	STA temp_en_x_move
 
+;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;; check right movement
 	LDA temp_en_x_move
 	CLC
 	ADC #$08
 	STA temp_en_x_move
-
+	CMP #RIGHTWALL
+	BNE @GetRightTile
+	JMP TraverseLeft
+@GetRightTile:
 	JSR Tile_Translate
 	CMP #$04
+	BNE @CheckRock
 	JSR BreakTree
+	JMP EnMovementDone
+@CheckRock:
 	CMP #$3B
-	BEQ FlipBottomFlag2
+	BNE GoingRight
+	JMP EnDown
 	
-	LDA En1_LocX
+GoingRight:
+	DEC EnRightCounter
+	BNE @Right
+	LDA #$04
+	STA EnRightCounter
+	JMP EnDown
+@Right:
+	INC EnemyPointY
+	LDY #$00
+	LDA #$34
+	STA (EnemyPointY), y
+	DEC EnemyPointY
+	
+	LDY #$00
+	LDA (EnemyPointX), y
 	CLC
 	ADC #$08
-	STA En1_LocX
-
-	LDA EnRightCounter
-	SEC
-	SBC #$01
-	STA EnRightCounter
-	BEQ FlipBottomFlag2
-
-	LDA EnDec
-	SEC
-	SBC #$01
-	STA EnDec
-	LDA EnDec
-	BEQ FlipBottomFlag2
-DONE:	
-	rts
-FlipBottomFlag2:	
-	LDA #$04
-	STA EnDec
-	STA EnRightCounter
+	STA (EnemyPointX), y
 	
-	LDA #$01
-	STA EnBit
-	rts
+	RTS
 
-FlipLeftFlag:
+TraverseLeft:	
 	LDA #%00001000
 	STA EnBit
-	rts
+;;; store temporary x&y Enemy Location
+	LDY #$00
+	LDA (EnemyPointY), y
+	STA temp_en_y_move
+	LDA (EnemyPointX), y
+	STA temp_en_x_move
 
-TraverseLeft:
-	LDA #$04
-	STA EnUpCounter
-	
-	LDA En1_LocX
+;;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;; check left movement
+	LDA temp_en_x_move
+	SEC
+	SBC #$08
+	STA temp_en_x_move
 	CMP #LEFTWALL
-	BEQ TraverseRight
-	
-	LDA #%00001000
-	STA EnBit
-	
-	LDA EnCounter4
-	CLC
-	ADC #$01
-	STA EnCounter4
-	
-	LDA EnCounter4
-	BNE DONE2
-
-	LDA EnCounter_Dec4
-	SEC
-	SBC #$01
-	STA EnCounter_Dec4
-	LDA EnCounter_Dec4
-	BNE DONE2
-InnerLoop3:
-	LDA #$02
-	STA EnCounter_Dec4
-	LDA #$00
-	STA EnCounter4
-	
-	LDA En1_LocY
-	STA temp_en_y_move
-	LDA En1_LocX
-	STA temp_en_x_move
-
-	LDA temp_en_x_move
-	SEC
-	SBC #$08
-	STA temp_en_x_move
-
+	BNE @GetLeftTile
+	JMP TraverseRight
+@GetLeftTile:
 	JSR Tile_Translate
 	CMP #$04
+	BNE @CheckRock
 	JSR BreakTree
+	JMP EnMovementDone
+@CheckRock:
 	CMP #$3B
-	BEQ FlipBottomFlag3
+	BNE GoingLeft
+	JMP EnUp
 	
-	LDA En1_LocX
-	SEC
-	SBC #$08
-	STA En1_LocX
-
-	LDA EnLeftCounter
-	SEC
-	SBC #$01
-	STA EnLeftCounter
-	BEQ FlipBottomFlag3
-
-	LDA EnDec
-	SEC
-	SBC #$01
-	STA EnDec
-	LDA EnDec
-	BEQ FlipBottomFlag3
-DONE2:	
-	rts
-FlipBottomFlag3:
+GoingLeft:
+	DEC EnLeftCounter
+	BNE @Left
 	LDA #$04
 	STA EnLeftCounter
+	JMP EnUp
+
+@Left:
+	INC EnemyPointY
+	LDY #$00
+	LDA #$24
+	STA (EnemyPointY), y
+	DEC EnemyPointY
 	
-	LDA #%00000010
-	STA EnBit
-	rts
+	LDY #$00
+	LDA (EnemyPointX), y
+	SEC
+	SBC #$08
+	STA (EnemyPointX), y
+
+	RTS

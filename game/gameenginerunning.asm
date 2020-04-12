@@ -5,20 +5,25 @@ GameEngineRunning:
 	STA EnPoint1Y+1
 	STA EnPoint1X+0
 	STA EnPoint1X+1
-	STA EnCounter
 	STA EnCounter2
 	STA EnCounter3
 	STA EnCounter4
 	STA EnBit
-	
-	LDA #$02
+	LDA EnemyTrueFalse
+
+	LDA #$40
+	STA EnCounter
+
+	;; LDA #$02
+	LDA #$01
 	STA EnCounter_Dec
 	STA EnCounter_Dec2
 	STA EnCounter_Dec3
 	STA EnCounter_Dec4
 
-	LDA #$04
+	LDA #$03
 	STA EnDec
+	LDA #$04
 	STA EnDownCounter
 	STA EnUpCounter
 	STA EnRightCounter
@@ -55,8 +60,13 @@ GameEngineRunning:
 Forever:
 
 	JSR PlayerDeathCheck1
+	
+	DEC EnCounter
+	BNE Forever
+	LDA #$80
+	STA EnCounter
 	JSR Enemy_Movement_Table
-
+	
 	JMP Forever
 
 	.include "game/deathcheck.asm"
