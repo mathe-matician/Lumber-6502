@@ -56,8 +56,10 @@ L			= z_Regs+1
 
 zm_Regs			= $25
 Z			= zm_Regs
-M			= zm_Regs+1	
-
+M			= zm_Regs+1
+;----------------------------------
+; Enemy OAM Variables
+;----------------------------------
 En1_LocY		= $0214
 En2_LocY		= $0218
 En3_LocY		= $021C
@@ -82,13 +84,16 @@ En8_LocX		= En8_LocY+3
 En9_LocX		= En9_LocY+3
 En10_LocX		= En10_LocY+3
 En11_LocX		= En11_LocY+3	
-En12_LocX		= En12_LocY+3	
-
+En12_LocX		= En12_LocY+3
+;----------------------------------
+; Player OAM Variables
+;----------------------------------
 shadow_oam		= $0200
 playerax_r		= $0204
 playerax_l		= $0208
 playerax_u		= $020C
-playerax_d		= $0210	
+playerax_d		= $0210
+;---------------------------------
 FrameCounter1		= $0A
 FrameCounter2		= $03
 FrameCounter3		= $05
@@ -131,8 +136,8 @@ PRGROM2			= $6200
 PRGROM3			= $6300	
 VRAMADDR		= $47
 tilenum			= $49
-VRAM_LO			= $4A
-VRAM_HI			= $4B
+ptr1			= $4A
+	;; 		= $4B
 VRAM			= $2000
 offset			= $4C
 prev_button		= $4D
@@ -172,8 +177,13 @@ EnUpCounter		= $6E
 EnRightCounter		= $6F
 EnLeftCounter		= $70
 EnCounter_Dec4		= $71
-EnCounter4		= $72	
-	
+EnCounter4		= $72
+EnemyPointY		= $73
+	;;		= $74
+EnemyPointX		= $75
+	;; 		= $76
+OAM_Num			= $77
+EnemyTrueFalse		= $78	
 ;-----------------------------------------
 ; Audio - Note Variables
 ;-----------------------------------------
