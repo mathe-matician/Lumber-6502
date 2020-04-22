@@ -43,6 +43,7 @@ PunchDown:
 	LDA #$19
 	STA playerax_d+1
 	Chop playerax_d, playerax_d+3, GetTile, S, Z, offset
+	
 	JMP PunchDone
 
 PunchLeft:
@@ -51,6 +52,7 @@ PunchLeft:
 	LDA #$18
 	STA playerax_l+1
 	Chop playerax_l, playerax_l+3, GetTile, S, Z, offset
+	
 	JMP PunchDone
 	
 PunchRight:
@@ -63,6 +65,7 @@ PunchRight:
 	Chop playerax_r, playerax_r+3, GetTile, S, Z, offset
 	
 PunchDone:
+	
 
 BeDone:	
 	JMP PlayerActionDone

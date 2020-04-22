@@ -8,9 +8,7 @@ Enemy_Movement_Table:
 ;; 	PHA	;push high byte
 ;; 	LDA En_Move_RTS_table, X
 ;; 	PHA 	;push low byte
-	;; 	RTS	;launches our subroutine indexed by enemy_num_tablecheck
-
-	;; took out rts jmp table because enemies ran better without it. probably not the best choice for this routine, but could be used later.
+;; 	RTS	;launches our subroutine indexed by enemy_num_tablecheck
 
 four_ens:
 	LDA EnemyTrueFalse
@@ -225,14 +223,7 @@ EnUp:
 
 	CMP #TOPWALL
 	BNE @GetUpTile
-	DEC TopWall_Flag
-	BEQ @TopWallJump
 	JMP EnMovementDone
-@TopWallJump:
-	LDA #$03
-	STA TopWall_Flag
-	JMP EnDown
-	;; JMP GoingDown 		;move en down immediately
 @GetUpTile:
 	JSR Tile_Translate
 	CMP #$04
@@ -242,14 +233,8 @@ EnUp:
 @CheckRock:
 	CMP #$3B
 	BNE GoingUp
-	LDA Up_Flag
-	BEQ @CheckRockJump
-	DEC Up_Flag
 	JMP TraverseRight
-@CheckRockJump:
-	LDA #$02
-	STA Up_Flag
-	JMP TraverseLeft
+
 GoingUp:
 	DEC EnUpCounter
 	BNE @Up

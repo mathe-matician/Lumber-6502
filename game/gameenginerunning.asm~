@@ -5,17 +5,24 @@ Forever:
 @loop:
 	lda sleeping
 	bne @loop
-	
 	LDA Timer_Out_Flag
 	BEQ @Continue3
 	JMP TimeUp
-@Continue3:
+@Continue3:	
+	;; INC Timer
+	;; BNE @Continue
+	;; DEC Timer_Dec
+	;; BNE @Continue
+	;; LDA #$01;how fast does the clock tick down?
+	;; STA Timer_Dec
+	
 	INC Timer
 	BNE @Continue
 	DEC UpdateTimer_Flag
 	LDA #$D0
 	STA Timer
 @Continue:
+	JSR PlayerDeathCheck1
 
 	DEC EnCounter
 	BNE Forever
@@ -26,8 +33,44 @@ Forever:
 	BNE @Continue2
 	JSR Update_Enemy_Score
 	INC EnemyTreeDraw_Flag
+
+	;; lda new_button
+	;; and #%01000000
+	;; beq @Continue2
+	;; jsr sfx_ax
 	
-@Continue2:
+@Continue2:	
+	;; LDA playerfacing
+	;; AND #%00001000
+	;; BNE FixUp
+
+	;; LDA playerfacing
+	;; AND #%00000100
+	;; BNE FixDown
+	
+	;; LDA playerfacing
+	;; AND #%00000010
+	;; BNE FixLeft
+
+	;; LDA playerfacing
+	;; AND #%00000001
+	;; BNE FixRight
+	;; JMP Forever
+;; FixUp:
+;; 	LDA #$16
+;; 	STA playerax_u+1
+;; 	JMP Forever
+;; FixDown:
+;; 	LDA #$16
+;; 	STA playerax_d+1
+;; 	JMP Forever
+;; FixLeft:
+;; 	LDA #$16
+;; 	STA playerax_l+1
+;; 	JMP Forever
+;; FixRight:
+;; 	LDA #$16
+	;; 	STA playerax_r+1
 	LDA #$16
 	STA playerax_u+1
 	STA playerax_d+1

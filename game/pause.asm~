@@ -1,0 +1,59 @@
+LoadPauseScreen:
+	BIT $2002
+	BPL LoadPauseScreen
+
+	LDA #$00
+	STA $2001
+
+	LDA $2002
+	LDA #$21
+	STA $2006
+	LDA #$6D
+	STA $2006
+
+	LDX #$09
+	LDY #$00
+@loadtext1:
+	LDA pause, y
+	STA $2007
+	INY
+	DEX
+	BNE @loadtext1
+
+	LDA $2002
+	LDA #$21
+	STA $2006
+	LDA #$8D
+	STA $2006
+
+	LDX #$09
+	LDY #$09
+@loadtext2:
+	LDA pause, y
+	STA $2007
+	INY
+	DEX
+	BNE @loadtext2
+
+	LDA $2002
+	LDA #$21
+	STA $2006
+	LDA #$AD
+	STA $2006
+
+	LDX #$09
+	LDY #$12
+@loadtext3:
+	LDA pause, y
+	STA $2007
+	INY
+	DEX
+	BNE @loadtext3
+
+	LDA #%00011110
+	STA $2001
+	LDA #$00
+	STA $2005
+	STA $2005
+
+	RTS

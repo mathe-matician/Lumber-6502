@@ -1,10 +1,6 @@
 LoadGameOverScreen:
-
-Load_Gameover:	
-
-gameover_text:	
 	BIT $2002
-	BPL gameover_text
+	BPL LoadGameOverScreen
 	
 	LDA #%00000000
 	STA $2001
@@ -12,47 +8,62 @@ gameover_text:
 	LDA $2002
 	LDA #$21
 	STA $2006
-	LDA #$6A
+	LDA #$0B
 	STA $2006
 
-	LDX #$0B
+	LDX #$0C
 	LDY #$00
-gameover_text_2_1:
-	LDA game_over, Y
+@Load1:
+	LDA eradicated, Y
 	STA $2007
 	INY
 	DEX
-	BNE gameover_text_2_1
+	BNE @Load1
 
 	LDA $2002
 	LDA #$21
 	STA $2006
-	LDA #$8A
+	LDA #$2B
 	STA $2006
 
-	LDX #$0B
-	LDY #$0B
-gameover_text_2_2:	
-	LDA game_over, Y
+	LDX #$0C
+	LDY #$0C
+@Load2:	
+	LDA eradicated, Y
 	STA $2007
 	INY
 	DEX
-	BNE gameover_text_2_2
+	BNE @Load2
 
 	LDA $2002
 	LDA #$21
 	STA $2006
-	LDA #$AA
+	LDA #$4B
 	STA $2006
 
-	LDX #$0B
-	LDY #$16
-gameover_text_2_3:
-	LDA game_over, Y
+	LDX #$0C
+	LDY #$18
+@Load3:
+	LDA eradicated, Y
 	STA $2007
 	INY
 	DEX
-	BNE gameover_text_2_3
+	BNE @Load3
+
+	LDA $2002
+	LDA #$21
+	STA $2006
+	LDA #$6B
+	STA $2006
+
+	LDX #$0C
+	LDY #$24
+@Load4:
+	LDA eradicated, Y
+	STA $2007
+	INY
+	DEX
+	BNE @Load4
 
 	LDA #%00011110
 	STA $2001
@@ -60,5 +71,4 @@ gameover_text_2_3:
 	STA $2005
 	STA $2005
 
-gameover_done:
 	RTS

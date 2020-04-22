@@ -1,0 +1,92 @@
+song1_header:
+	.byte $04           ;4 streams
+    
+	.byte MUSIC_SQ1     ;which stream
+	.byte $01           ;status byte (stream enabled)
+	.byte SQUARE_1      ;which channel
+	.byte $77           ;initial volume (7) and duty (01)
+	.word song1_square1 ;pointer to stream
+	.byte $50           ;tempo
+    
+	.byte MUSIC_SQ2     ;which stream
+	.byte $01           ;status byte (stream enabled)
+	.byte SQUARE_2      ;which channel
+	.byte $B7           ;initial volume (7) and duty (10)
+	.word song1_square2 ;pointer to stream
+	.byte $50           ;tempo
+    
+	.byte MUSIC_TRI     ;which stream
+	.byte $01           ;status byte (stream enabled)
+	.byte TRIANGLE      ;which channel
+	.byte $81           ;initial volume (on)
+	.word song1_tri     ;pointer to stream
+	.byte $50           ;tempo
+    
+	.byte MUSIC_NOI     ;which stream
+	.byte $00           ;disabled.  Our load routine will skip the
+                        ;   rest of the reads if the status byte is 0.
+                        ;   We are disabling Noise because we haven't covered it yet.
+
+;Memphis Blues - W.C. Handy
+;Guitar arrangement by Lasse Johansson from Early Jazz for Finger Style Guitar
+;Intro & Part 1
+			
+song1_square1:
+	.byte eighth, E5, eighth, Fs5, eighth, G5 ;intro
+	.byte eighth, Gs5, eighth, E6, eighth, Ds6, d_quarter, D6, quarter, B5
+	.byte eighth, C6, eighth, Cs6, eighth, Cs6, eighth, Cs6, eighth, Cs6, eighth, C6, eighth, Cs6, eighth, A5
+	.byte quarter, A5, eighth, E6, eighth, F6, eighth, Fs6, eighth, A6, eighth, D5
+	.byte half, E6, quarter, rest, eighth, E6, eighth, Fs6, eighth, Cs6
+	.byte quarter, E6, eighth, Fs6, d_quarter, E6, eighth, rest, eighth, Ds6 ;firstsect
+	.byte eighth, E6, eighth, Fs6, eighth, G6, eighth, E6, eighth, Cs5, eighth, Cs5, eighth, B5, eighth, A5
+	.byte quarter, rest, eighth, rest, eighth, B5, eighth, C6, eighth, A5, eighth, B5, eighth, A5
+	.byte half, rest, eighth, rest, eighth, C6, eighth, Cs6, eighth, A5
+	.byte quarter, B5, quarter, A5, half, A5
+	.byte eighth, C6, quarter, C6, quarter, C6, eighth, A5, eighth, B5, eighth, A5
+	.byte eighth, A5, eighth, G6, eighth, A6, eighth, Ds6, eighth, E6, eighth, C6, eighth, Cs6, eighth, A5
+	.byte eighth, E4, eighth, Fs4, eighth, A5, eighth, Cs6, quarter, E6, quarter, Ds6
+	.byte quarter, D6, eighth, E6, eighth, A5, quarter, A5, eighth, E4, eighth, Fs4
+	.byte eighth, A5, eighth, B5, eighth, A5, eighth, Fs4, eighth, A5, eighth, B5, eighth, D5, eighth, A5
+	.byte quarter, rest, quarter, rest, eighth, rest, eighth, D6, eighth, rest, eighth, rest
+	.byte eighth, Cs6, eighth, rest, quarter, rest, eighth, rest
+	.byte $FF
+    
+song1_square2:
+	.byte eighth, rest, eighth, rest, eighth, rest
+	.byte eighth, rest, eighth, rest, eighth, A5, d_quarter, Gs5, eighth, rest
+	.byte quarter, A5, quarter, rest, quarter, Gs5, quarter, rest
+	.byte whole, rest
+	.byte half, A5, half, rest
+	.byte quarter, rest, eighth, D5, d_quarter, Cs5, quarter, rest ;firstsec
+	.byte quarter, rest, eighth, Cs5, eighth, rest, eighth, A4, eighth, rest, quarter, rest
+	.byte whole, rest
+	.byte whole, rest
+	.byte whole, rest
+	.byte eighth, A5, quarter, A5, quarter, A5, eighth, rest, quarter, rest
+	.byte whole, rest
+	.byte half, rest, quarter, rest, quarter, A5
+	.byte quarter, Gs5, half, rest, quarter, rest
+	.byte whole, rest
+	.byte quarter, rest, quarter, rest, eighth, rest, eighth, A5, eighth, rest, eighth, rest
+	.byte eighth, A5, eighth, rest, quarter, rest, eighth, rest
+	.byte $FF
+    
+song1_tri:
+	.byte eighth, rest, eighth, rest, eighth, rest
+	.byte quarter, B3, quarter, C4, quarter, B3, quarter, E3
+	.byte quarter, Ds4, quarter, Fs3, quarter, D4, quarter, E3
+	.byte quarter, A3, quarter, Cs4, quarter, D4, quarter, B3
+	.byte quarter, Cs4, quarter, E3, quarter, A3, quarter, rest	    
+	.byte quarter, A3, eighth, rest, quarter, E3, quarter, E4 ;firstsec
+	.byte quarter, A3, quarter, A4, quarter, A3, quarter, G3
+	.byte quarter, Fs3, quarter, D4, quarter, A3, quarter, D4
+	.byte quarter, A3, quarter, E4, quarter, E3, quarter, E4
+	.byte quarter, Fs3, quarter, D4, quarter, A3, quarter, D4
+	.byte quarter, Fs3, quarter, D4, quarter, Fs3, quarter, D4
+	.byte half, A3, half, rest
+	.byte half, rest, quarter, Cs4, quarter, C4
+	.byte quarter, B3, eighth, E4, eighth, E4, half, E3
+	.byte quarter, Fs3, eighth, Ds4, eighth, rest, quarter, E3, quarter, D4
+	.byte quarter, Cs4, eighth, E5, eighth, F5, quarter, Fs5, eighth, F5, eighth, D4
+	.byte eighth, E4, eighth, A3, eighth, Gs3, eighth, Fs3, half, E3
+	.byte $FF

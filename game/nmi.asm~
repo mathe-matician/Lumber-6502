@@ -39,11 +39,13 @@ PpuScroll:
 	STA $2005		;ppu scroll - turn off
 	STA $2005
 
+	;; Optional
+	;; 7)run music code
+	;; 8)wait for sprite 0 hit and change the VRAM address
 	INC FrameCounter1
-	LDA playerfacing
-	AND #%00001000
-	BNE @Next
-@Next:
+	
+	JSR UpdateController
+	
 	LDA UpdateTimer_Flag
 	BNE @Continue 
 	JSR Update_Timer_Ones
@@ -54,15 +56,8 @@ PpuScroll:
 	JSR Update_Timer_Tens
 	INC UpdateTimerTens_Flag
 @Continue:
-	
-	JSR UpdateController
-	
-	;; run music code after drawing
-	jsr sound_play_frame
-	
 	LDA #$00
 	STA draw_flags
-	sta sleeping
 	PullAll
 
 	RTI

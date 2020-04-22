@@ -30,11 +30,7 @@ En_Loc_Check_Done1:
 	DEX
 	BNE En_Loc_Check1
 	JMP DeathCheckDone
-En_Hit:
-	lda #$00
-	jsr sound_load
-	lda #$05
-	jsr sound_load
+En_Hit:	
 	LDA #$03
 	STA shadow_oam+2
 	LDA #$00	;could just load into the start control
