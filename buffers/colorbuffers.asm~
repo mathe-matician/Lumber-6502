@@ -19,11 +19,11 @@ timer_tens_bottom:
 	.dw $204F
 
 score_en_ones:
-	.dw $204C
+	.dw $204D
 score_en_tens:
-	.dw $204B
+	.dw $204C
 score_en_hund:
-	.dw $204A
+	.dw $204B
 score_player_ones:
 	.dw $2056
 score_player_tens:
