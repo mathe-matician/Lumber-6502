@@ -86,7 +86,6 @@
 	CMP #$04
 	BNE ChopDone
 	DEC PlayerTreeDraw_Flag
-	INC PlayerTreeCount
 ChopDone:
 	ENDM
 

@@ -1,9 +1,17 @@
+;; vblankwait2:   
+;; 	BIT $2002
+	;; 	BPL vblankwait2
+	;; LDA #$00
+	;; STA $2001
+
+	;; LDA #%10010000
+	;; STA $2000
 	
 	LDA #$00
 	STA Point+0
 	STA Point+1
 BGTORAM:
-	LDA $6000
+	LDA $6000	
 	ASL
 	TAY
 
@@ -11,20 +19,11 @@ BGTORAM:
 	STA Point+0
 	LDA bg_point+1,y
 	STA Point+1
-	
-	LDX #$60
-	LDY #$00
-TopBar:
-	LDA top_bar, y
-	STA (Point), y
-	INY
-	DEX
-	BNE TopBar
 
+	LDX #$04
+	LDY #$00
 	TYA
 	PHA
-	
-	LDX #$04
 PRNG_MAP:	
 	LDY #$08	
 	LDA seed2+0

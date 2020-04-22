@@ -46,11 +46,6 @@ CopyByte:
 	STA BG256
 	BNE CopyByte
 
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
-
 LoadPalettes1:
 	LDA $2002          
 	LDA #$3F

@@ -49,9 +49,6 @@ clr6000:
 	STA Timer_Ones_Top_Point+1
 	STA Timer_Ones_Bottom_Point+0
 	STA Timer_Ones_Bottom_Point+1
-	sta UpdateTimer_Flag
-	sta UpdateTimerTens_Flag
-	sta UpdateTimerOnes_Flag
 	
 ;; vblankwait0:
 ;; 	BIT $2002
@@ -62,9 +59,4 @@ clr6000:
 
 
 	JSR sound_init
-	LDA #$01
-	JSR sound_load
-
-vblankwait0:
-	BIT $2002
-	BPL vblankwait0
+	;; JSR sound_load

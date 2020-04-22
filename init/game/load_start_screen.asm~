@@ -21,11 +21,6 @@ LoadStartScreen:
 	CPX #$00
 	BNE @Loop1
 
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
-
 LoadStartScreen2:
 	LDA $2002
 	LDA #$21
@@ -44,11 +39,6 @@ LoadStartScreenLoop2:
 	DEX
 	BNE LoadStartScreenLoop2
 
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
-
 	LDX #$00
 	LDY #$00
 	
@@ -59,11 +49,6 @@ LoadStartScreenLoop2_1:
 	INX
 	CPX #$00
 	BNE LoadStartScreenLoop2_1
-
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
 
 LoadStartScreen3:
 	LDA $2002
@@ -82,11 +67,6 @@ LoadStartScreenLoop3:
 	DEX
 	BNE LoadStartScreenLoop3
 
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
-	
 	LDX #$00
 	;; LDY #$00
 
@@ -98,11 +78,6 @@ LoadStartScreenLoop3_1:
 	INX
 	CPX #$00
 	BNE LoadStartScreenLoop3_1
-
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
 
 LoadStartScreen4:
 	LDA $2002
@@ -123,10 +98,6 @@ LoadStartScreenLoop4:
 	CPX #$00
 	BNE LoadStartScreenLoop4
 
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
 
 	;; does this only need to be loaded once?
 LoadPalettes:
@@ -141,12 +112,7 @@ LoadPalettesLoop:
 	STA $2007             ; write to PPU
 	INX                   
 	CPX #$20              
-	BNE LoadPalettesLoop
-
-	LDA #$00
-	STA $2002
-	STA $2005
-	STA $2005
+	BNE LoadPalettesLoop 
 
 LoadAttribute:
 	LDA $2002             ; read PPU status to reset the high/low latch

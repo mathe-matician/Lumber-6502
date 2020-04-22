@@ -1,6 +1,6 @@
 ;------------------------------------------------;
 ; Lumber by Zach Mathe - 2020                    ;
-; ASM6
+; ASM6						 ;
 ;------------------------------------------------;
 
 	.include "vars/variables.asm"
@@ -25,6 +25,7 @@
 	.include "buffers/colorbuffers.asm"
 	.include "buffers/levelbuffers.asm"
 	.include "game/enemy_movement.asm"
+	.include "game/soundengine.asm"
 	
 	.include "ender/interrupts.asm"
 	.include "ender/chrrom.asm"
