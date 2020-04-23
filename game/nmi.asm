@@ -68,7 +68,40 @@ PpuScroll:
 	JSR Update_Enemy_Score
 	INC EnemyTreeDraw_Flag	
 @Continue4:
-
+	lda Draw_PlayerDeath_Flag
+	BEQ @next1
+	jsr LoadGameOverScreen
+@next1:
+	lda Draw_TimerUp_Flag
+	beq @next2
+	lda Timer_Set_Flag
+	bne @next2
+	inc Timer_Set_Flag
+	jsr LoadTimeUpScreen
+@next2:
+	lda Draw_HumansWin_Flag
+	beq @next3
+	lda Human_Set_Flag
+	bne @done
+	inc Human_Set_Flag
+	jsr LoadHumansWin
+	jmp @done
+@next3:
+	lda Draw_AliensWin_Flag
+	beq @next4
+	lda Alien_Set_Flag
+	bne @done
+	inc Alien_Set_Flag
+	jsr LoadAliensWin
+	jmp @done
+@next4:
+	lda Draw_Tie_Flag
+	beq @done
+	lda Tie_Set_Flag
+	bne @done
+	inc Tie_Set_Flag
+	jsr LoadScoreTie
+@done:
 	;; run music code after drawing
 	jsr sound_play_frame
 	
