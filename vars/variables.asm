@@ -266,7 +266,17 @@ song_flag		= $C6
 ax_x_temp		= $C7
 ax_y_temp		= $C8
 p_chopped_tree_flag	= $C9
-s_y			= $CA	
+s_y			= $CA
+Timer_Out_Draw_Flag	= $CB
+Draw_AliensWin_Flag	= $CC
+Draw_HumansWin_Flag	= $CD
+Draw_Tie_Flag		= $CE
+Draw_TimerUp_Flag	= $CF
+Draw_PlayerDeath_Flag	= $D0
+Timer_Set_Flag		= $D1
+Human_Set_Flag		= $D2
+Alien_Set_Flag		= $D3
+Tie_Set_Flag		= $D4	
 	.enum $0300
 sound_disable_flag	.dsb 1
 sound_temp1		.dsb 1
