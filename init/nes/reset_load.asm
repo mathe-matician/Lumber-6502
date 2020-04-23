@@ -43,7 +43,24 @@ clr6000:
 	STA $6400, x
 	INX
 	BNE clr6000
-	
+
+	lda #$00
+	sta timer_ones_top+0
+	sta timer_ones_top+1
+	sta timer_tens_top+0
+	sta timer_tens_top+1
+	sta timer_ones_bottom+0
+	sta timer_ones_bottom+1
+	sta timer_tens_bottom+0
+	sta timer_tens_bottom+1
+	sta Timer_Ones_Top_Point+0
+	sta Timer_Ones_Top_Point+1
+	sta Timer_Ones_Bottom_Point+0
+	sta Timer_Ones_Bottom_Point+1
+	sta Timer_Tens_Top_Point+0
+	sta Timer_Tens_Top_Point+1
+	sta Timer_Tens_Bottom_Point+0
+	sta Timer_Tens_Bottom_Point+1
 vblankwait0:
 	BIT $2002
 	BPL vblankwait0
