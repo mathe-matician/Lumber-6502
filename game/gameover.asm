@@ -1,6 +1,6 @@
 LoadGameOverScreen:
-	BIT $2002
-	BPL LoadGameOverScreen
+	;; BIT $2002
+	;; BPL LoadGameOverScreen
 	
 	LDA #%00000000
 	STA $2001
