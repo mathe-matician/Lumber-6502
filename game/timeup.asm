@@ -1,6 +1,6 @@
 LoadTimeUpScreen:
-	BIT $2002
-	BPL LoadTimeUpScreen
+	;; BIT $2002
+	;; BPL LoadTimeUpScreen
 
 	LDA #$00
 	STA $2001
@@ -59,8 +59,8 @@ LoadTimeUpScreen:
 	RTS
 
 LoadHumansWin:
-	BIT $2002
-	BPL LoadHumansWin
+	;; BIT $2002
+	;; BPL LoadHumansWin
 
 	lda #$00
 	jsr sound_load
@@ -85,6 +85,10 @@ LoadHumansWin:
 	DEX
 	BNE @Load1
 
+	lda #$00
+	sta $2005
+	sta $2005
+
 	LDA $2002
 	LDA #$21
 	STA $2006
@@ -99,6 +103,10 @@ LoadHumansWin:
 	INY
 	DEX
 	BNE @Load2
+
+	lda #$00
+	sta $2005
+	sta $2005
 
 	LDA $2002
 	LDA #$21
@@ -124,8 +132,8 @@ LoadHumansWin:
 	RTS
 
 LoadAliensWin:
-	BIT $2002
-	BPL LoadAliensWin
+	;; BIT $2002
+	;; BPL LoadAliensWin
 
 	lda #$00
 	jsr sound_load
@@ -149,6 +157,10 @@ LoadAliensWin:
 	INY
 	DEX
 	BNE @Load1
+
+	lda #$00
+	sta $2005
+	sta $2005
 
 	LDA $2002
 	LDA #$21
@@ -180,6 +192,10 @@ LoadAliensWin:
 	DEX
 	BNE @Load3
 
+	lda #$00
+	sta $2005
+	sta $2005
+
 	LDA #%00011110
 	STA $2001
 	LDA #$00
@@ -189,8 +205,8 @@ LoadAliensWin:
 	RTS
 
 LoadScoreTie:
-	BIT $2002
-	BPL LoadScoreTie
+	;; BIT $2002
+	;; BPL LoadScoreTie
 	
 	LDA #%00000000
 	STA $2001

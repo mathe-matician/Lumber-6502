@@ -41,7 +41,8 @@ En_Hit:
 	STA STATE	;STATE
 	LDA #%00000010
 	STA STATE	;STATE
-	JSR LoadGameOverScreen
+	;; JSR LoadGameOverScreen
+	inc Draw_PlayerDeath_Flag
 	JMP GameOver
 DeathCheckDone:	
 	RTS
