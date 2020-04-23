@@ -22,12 +22,12 @@ GetTile:
 	lda S+1
 	adc bg_point+1
 	sta S+1
-
+	lda (S), y
+	sta whattile_player
 	;get the tile
 	lda (S), y
 	CMP #$3B
 	BEQ GetTileDone
-	
 	;; zeros out tile in PRGROM ($6000) logically you can now walk through spaces that have been chopped
 	LDA #$00
 	STA (S), Y

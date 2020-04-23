@@ -7,7 +7,9 @@ GetTile:
 	lsr
 	lsr
 	tay
-	;multiplication by 32 of the Y coordinate
+				;multiplication by 32 of the Y coordinate
+	sty s_y	;test
+	
 	lda #$00
 	sta S+1
 	txa
@@ -25,14 +27,17 @@ GetTile:
 	lda (S), y
 	sta whattile_player
 	;get the tile
+	;; lda (S), y
+	;; CMP #$3B
+	;; BEQ GetTileDone
 	lda (S), y
-	CMP #$3B
-	BEQ GetTileDone
+	CMP #$04
+	BNE GetTileDone
 	;; zeros out tile in PRGROM ($6000) logically you can now walk through spaces that have been chopped
 	LDA #$00
 	STA (S), Y
 	STA Z
 	STA offset
+	
 GetTileDone:	
-
 	RTS
