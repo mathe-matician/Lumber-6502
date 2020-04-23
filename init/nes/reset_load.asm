@@ -13,7 +13,7 @@ RESET:
 	;; LDA #%10010000
 	;; STA $2000
 
-	;; BIT $2002
+	BIT $2002
 	
 vblankwait1:
 	BIT $2002
@@ -43,19 +43,10 @@ clr6000:
 	STA $6400, x
 	INX
 	BNE clr6000
-
-	LDA #$00
-	STA Timer_Ones_Top_Point+0
-	STA Timer_Ones_Top_Point+1
-	STA Timer_Ones_Bottom_Point+0
-	STA Timer_Ones_Bottom_Point+1
-	sta UpdateTimer_Flag
-	sta UpdateTimerTens_Flag
-	sta UpdateTimerOnes_Flag
 	
-;; vblankwait0:
-;; 	BIT $2002
-;; 	BPL vblankwait0
+vblankwait0:
+	BIT $2002
+	BPL vblankwait0
 	LDA $2002
 	LDA #%10010000
 	STA $2000
@@ -63,8 +54,5 @@ clr6000:
 
 	JSR sound_init
 	LDA #$01
+	;; sta current_song
 	JSR sound_load
-
-vblankwait0:
-	BIT $2002
-	BPL vblankwait0
