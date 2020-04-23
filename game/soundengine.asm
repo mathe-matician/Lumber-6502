@@ -10,27 +10,7 @@ MUSIC_NOI = $03
 SFX_1     = $04
 SFX_2     = $05
 
-	.enum $0300
-sound_disable_flag	.dsb 1
-sound_temp1		.dsb 1
-sound_temp2		.dsb 1
-sound_sq1_old		.dsb 1
-sound_sq2_old		.dsb 1
-soft_apu_ports		.dsb 16
 	
-stream_curr_sound	.dsb 6
-stream_status		.dsb 6
-stream_channel		.dsb 6
-stream_ptr_LO		.dsb 6
-stream_ptr_HI		.dsb 6
-stream_vol_duty		.dsb 6
-stream_note_LO		.dsb 6
-stream_note_HI		.dsb 6
-stream_tempo		.dsb 6
-stream_ticker_total	.dsb 6
-stream_note_length_counter .dsb 6
-stream_note_length	.dsb 6
-	.ende
 
 sound_init:
     lda #$0F
@@ -336,24 +316,4 @@ se_set_apu:
 NUM_SONGS = $07 ;if you add a new song, change this number.    
                 ;headers.asm checks this number in its song_up and song_down subroutines
                 ;to determine when to wrap around.
-
-;this is our pointer table.  Each entry is a pointer to a song header                
-song_headers:
-    .word song0_header  ;this is a silence song.  See song0.i for more details
-    .word song1_header  ;start screen music - memphis blues
-    .word song2_header  ;game music
-    .word song3_header  ;player wins
-    .word song4_header  ;timer up
-    .word song5_header  ;enemy wins
-    .word song6_header	;press start on start screen SFX
-    
-    .include "game/SE/note_table.asm" ;period lookup table for notes
-    .include "game/SE/note_length_table.asm"
-    .include "game/SE/song0.asm"  ;holds the data for song 0 (header and data streams)
-    .include "game/SE/song1.asm"  ;holds the data for song 1
-    .include "game/SE/song2.asm"
-    .include "game/SE/song3.asm"
-    .include "game/SE/song4.asm"
-    .include "game/SE/song5.asm"
-    .include "game/SE/song6.asm"
 

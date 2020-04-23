@@ -90,7 +90,8 @@ EnDown:
 	JSR Tile_Translate
 	CMP #$04
 	BNE @CheckRock
-	JSR BreakTree
+	;; JSR BreakTree
+	DEC EnemyTreeDraw_Flag
 	JMP EnMovementDone
 @CheckRock:
 	CMP #$3B
@@ -162,10 +163,10 @@ BreakTree:
 	ADC offset
 	STA EnPtr1+0
 
-	BIT $2002
-vblankwaiter:
-	BIT $2002
-	BPL vblankwaiter
+	;; BIT $2002
+;; vblankwaiter:
+;; 	BIT $2002
+;; 	BPL vblankwaiter
 	LDA EnPtr1+1
 	STA $2006
 	LDA EnPtr1+0
@@ -175,7 +176,7 @@ vblankwaiter:
 	STA $2005
 	STA $2005
 	INC EnemyTreeCount
-	DEC EnemyTreeDraw_Flag
+	;; DEC EnemyTreeDraw_Flag
 ChopDone1:
 	rts
 
@@ -237,7 +238,8 @@ EnUp:
 	JSR Tile_Translate
 	CMP #$04
 	BNE @CheckRock
-	JSR BreakTree
+	;; JSR BreakTree
+	DEC EnemyTreeDraw_Flag
 	JMP EnMovementDone
 @CheckRock:
 	CMP #$3B
@@ -295,7 +297,8 @@ TraverseRight:
 	JSR Tile_Translate
 	CMP #$04
 	BNE @CheckRock
-	JSR BreakTree
+	;; JSR BreakTree
+	DEC EnemyTreeDraw_Flag
 	JMP EnMovementDone
 @CheckRock:
 	CMP #$3B
@@ -346,7 +349,8 @@ TraverseLeft:
 	JSR Tile_Translate
 	CMP #$04
 	BNE @CheckRock
-	JSR BreakTree
+	;; JSR BreakTree
+	DEC EnemyTreeDraw_Flag
 	JMP EnMovementDone
 @CheckRock:
 	CMP #$3B

@@ -11,5 +11,4 @@ song4_header:
 song4_square2:
 	.byte sixteenth, D3, Fs4, A5, D4, Fs5, A6, D5, Fs6, A7
 	.byte sixteenth, D3, Fs4, A5, D4, Fs5, A6, D5, Fs6, A7
-	.byte sixteenth, D3, Fs4, A5, D4, Fs5, A6, D5, Fs6, A7
 	.byte $FF

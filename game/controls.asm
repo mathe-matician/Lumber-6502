@@ -15,6 +15,7 @@ Gameover_Controls:
 	JMP Start_ControlsDone
 	
 Start_Controls:
+	;; seed2 is here for entropy for whenever the user clicks enter
 	LDA seed2
 	CLC
 	ADC #$01
@@ -23,12 +24,11 @@ Start_Controls:
 	CLC
 	ADC #$03
 	STA seed2+1
+	
 	LDA buttons1
 	AND #%00010000
 	BEQ Start_ControlsDone
 	LDA #$06
-	JSR sound_load
-	LDA #$02
 	JSR sound_load
 	LDA #%00000001
 	STA levels
@@ -38,7 +38,6 @@ Start_ControlsDone:
 	JMP ControlsDone
 
 Game_Controls:
-	
 	LDA FrameCounter1
 	CMP #$06
 	BEQ Start_Game_Controls
@@ -366,6 +365,9 @@ WalkLeftDone:
 	STA playerax_d+3
 	
 	JMP ControlsDone
+;; PlayerPunchClose:
+;; 	JMP PlayerPunch
+
 SevenBlockLeft:
 	LDA #%00000010
 	STA sevenblock
@@ -373,7 +375,8 @@ SevenBlockLeft:
 MovePlayerLeftDone:
 	LDA playerfacing
 	CMP #%00000010
-	BNE PlayerPunch
+	;; BNE PlayerPunch
+	BNE ControlsDone
 	LDA #$27
 	STA shadow_oam+1
 	LDA #$16

@@ -31,6 +31,41 @@ song2_square1:
 	.byte eighth, D2, D2, E2, E2, E2, E2, E2, E2
 	.byte eighth, E2, E2, E2, E2, Fs2, Fs2, Fs2, Fs2
 	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2 ;end of first
+	.byte eighth, D2, D2, D2, D2, D2, D2, E2, E2
+	.byte eighth, E2, E2, E2, E2, E2, E2, E2, E2
+	.byte eighth, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, G2
+	.byte eighth, G2, G2, G2, G2, G2, G2, A2, G2
+	.byte eighth, Fs2, E2, D2, D2, D2, D2, D2, D2
+	.byte eighth, D2, D2, E2, E2, E2, E2, E2, E2
+	.byte eighth, E2, E2, E2, E2, Fs2, Fs2, Fs2, Fs2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, D2, D2, D2, D2, D2, D2, E2, E2
+	.byte eighth, E2, E2, E2, E2, E2, E2, E2, E2
+	.byte eighth, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, G2
+	.byte eighth, G2, G2, G2, G2, G2, G2, A2, G2
+	.byte eighth, Fs2, E2, D2, D2, D2, D2, D2, D2
+	.byte eighth, D2, D2, E2, E2, E2, E2, E2, E2
+	.byte eighth, E2, E2, E2, E2, Fs2, Fs2, Fs2, Fs2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, D2, D2, D2, D2, D2, D2, E2, E2
+	.byte eighth, E2, E2, E2, E2, E2, E2, E2, E2
+	.byte eighth, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, G2
+	.byte eighth, G2, G2, G2, G2, G2, G2, A2, G2
+	.byte eighth, Fs2, E2, D2, D2, D2, D2, D2, D2
+	.byte eighth, D2, D2, E2, E2, E2, E2, E2, E2
+	.byte eighth, E2, E2, E2, E2, Fs2, Fs2, Fs2, Fs2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
+	.byte eighth, D2, D2, D2, D2, D2, D2, E2, E2
+	.byte eighth, E2, E2, E2, E2, E2, E2, E2, E2
+	.byte eighth, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, Fs2, G2
+	.byte eighth, G2, G2, G2, G2, G2, G2, A2, G2
+	.byte eighth, Fs2, E2, D2, D2, D2, D2, D2, D2
+	.byte eighth, D2, D2, E2, E2, E2, E2, E2, E2
+	.byte eighth, E2, E2, E2, E2, Fs2, Fs2, Fs2, Fs2
 	.byte eighth, Fs2, G2, G2, G2, G2, G2, G2, G2
 	.byte $FF
     
@@ -43,7 +78,42 @@ song2_square2:
 	.byte eighth, D5, D5, D5, D5, B5, A5, A5, G5
 	.byte eighth, G5, Fs5, E5, D5, E5, D5, D5, D5
 	.byte eighth, D5, D5, D5, D5, E5, E5, E5, E5
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, G5, G5, G5, G5 ;end of first
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, Fs5, Fs5, G5, G5
+	.byte eighth, G5, G5, G5, G5, G5, G5, G5, Fs5
+	.byte eighth, G5, A5, A5, A5, A5, A5, A5, G5
+	.byte eighth, G5, G5, G5, G5, G5, Fs5, E5, D5
+	.byte eighth, E5, D5, D5, D5, D5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, B5, A5, A5, G5
+	.byte eighth, G5, Fs5, E5, D5, E5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, E5, E5, E5, E5
 	.byte eighth, Fs5, Fs5, Fs5, Fs5, G5, G5, G5, G5
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, Fs5, Fs5, G5, G5
+	.byte eighth, G5, G5, G5, G5, G5, G5, G5, Fs5
+	.byte eighth, G5, A5, A5, A5, A5, A5, A5, G5
+	.byte eighth, G5, G5, G5, G5, G5, Fs5, E5, D5
+	.byte eighth, E5, D5, D5, D5, D5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, B5, A5, A5, G5
+	.byte eighth, G5, Fs5, E5, D5, E5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, E5, E5, E5, E5
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, G5, G5, G5, G5
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, Fs5, Fs5, G5, G5
+	.byte eighth, G5, G5, G5, G5, G5, G5, G5, Fs5
+	.byte eighth, G5, A5, A5, A5, A5, A5, A5, G5
+	.byte eighth, G5, G5, G5, G5, G5, Fs5, E5, D5
+	.byte eighth, E5, D5, D5, D5, D5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, B5, A5, A5, G5
+	.byte eighth, G5, Fs5, E5, D5, E5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, E5, E5, E5, E5
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, G5, G5, G5, G5
+	.byte eighth, Fs5, Fs5, Fs5, Fs5, Fs5, Fs5, G5, G5
+	.byte eighth, G5, G5, G5, G5, G5, G5, G5, Fs5
+	.byte eighth, G5, A5, A5, A5, A5, A5, A5, G5
+	.byte eighth, G5, G5, G5, G5, G5, Fs5, E5, D5
+	.byte eighth, E5, D5, D5, D5, D5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, B5, A5, A5, G5
+	.byte eighth, G5, Fs5, E5, D5, E5, D5, D5, D5
+	.byte eighth, D5, D5, D5, D5, E5, E5, E5, E5
 	.byte $FF
     
 song2_tri: 
@@ -55,7 +125,42 @@ song2_tri:
 	.byte eighth, Fs4, D3, Cs4, D4, Fs3, D5, D4, D3
 	.byte eighth, D5, Cs4, A4, Cs4, D4, Fs3, G5, D4
 	.byte eighth, D4, D3, D5, Fs4, A4, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4 ;end of first
+	.byte eighth, D4, D3, D5, Fs4, A5, Cs4, D4, Fs3
 	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, D4, D3, D5, Fs4
+	.byte eighth, A5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, Cs4, Fs4, Cs4, D4
+	.byte eighth, Fs4, D3, Cs4, D4, Fs3, D5, D4, D3
+	.byte eighth, D5, Cs4, A4, Cs4, D4, Fs3, G5, D4
+	.byte eighth, D4, D3, D5, Fs4, A4, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, D4, D3, D5, Fs4, A5, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, D4, D3, D5, Fs4
+	.byte eighth, A5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, Cs4, Fs4, Cs4, D4
+	.byte eighth, Fs4, D3, Cs4, D4, Fs3, D5, D4, D3
+	.byte eighth, D5, Cs4, A4, Cs4, D4, Fs3, G5, D4
+	.byte eighth, D4, D3, D5, Fs4, A4, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, D4, D3, D5, Fs4, A5, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, D4, D3, D5, Fs4
+	.byte eighth, A5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, Cs4, Fs4, Cs4, D4
+	.byte eighth, Fs4, D3, Cs4, D4, Fs3, D5, D4, D3
+	.byte eighth, D5, Cs4, A4, Cs4, D4, Fs3, G5, D4
+	.byte eighth, D4, D3, D5, Fs4, A4, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, D4, D3, D5, Fs4, A5, Cs4, D4, Fs3
+	.byte eighth, G5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, D4, D3, D5, Fs4
+	.byte eighth, A5, D4, D3, D5, Fs4, A5, Cs4, D4
+	.byte eighth, Fs3, G5, D4, D3, Cs4, Fs4, Cs4, D4
+	.byte eighth, Fs4, D3, Cs4, D4, Fs3, D5, D4, D3
+	.byte eighth, D5, Cs4, A4, Cs4, D4, Fs3, G5, D4
+	.byte eighth, D4, D3, D5, Fs4, A4, Cs4, D4, Fs3
 	.byte $FF 
 
 			      ;.byte eighth, D4, D3, D5, Fs4, A5, Cs4, D4, Fs3, G5, D4, D3, D5

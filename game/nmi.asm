@@ -6,7 +6,6 @@ DoFrame:
 ; NMI
 ;---------------------------------------
 NMI:
-
 	PushAll
 	LDA #$00
 	STA $2003
@@ -31,8 +30,6 @@ NeedPpuReg:
 	LDA #%00011110
 	STA $2001
 
-	;; need to change something above with adding logic to turn screen off for a redraw...
-
 PpuScroll:
 	BIT $2002
 	LDA #$00
@@ -40,25 +37,42 @@ PpuScroll:
 	STA $2005
 
 	INC FrameCounter1
-	LDA playerfacing
-	AND #%00001000
-	BNE @Next
-@Next:
+
+	jsr Player_Chop
+	LDA PlayerTreeDraw_Flag
+	BNE @test
+	;; jsr Player_Chop
+	JSR Update_Player_Score
+	inc PlayerTreeDraw_Flag
+@test:
 	LDA UpdateTimer_Flag
 	BNE @Continue 
 	JSR Update_Timer_Ones
 	INC UpdateTimer_Flag
-
+@Check:
 	LDA UpdateTimerTens_Flag
 	BNE @Continue
 	JSR Update_Timer_Tens
 	INC UpdateTimerTens_Flag
 @Continue:
-	
-	JSR UpdateController
-	
+	;; LDA PlayerTreeDraw_Flag
+	;; BNE @Continue2
+	;; jsr Player_Chop
+	;; ;; inc PlayerTreeDraw_Flag
+	;; JSR Update_Player_Score
+	;; INC PlayerTreeDraw_Flag
+@Continue2:
+	lda EnemyTreeDraw_Flag
+	BNE @Continue4
+	JSR BreakTree
+	JSR Update_Enemy_Score
+	INC EnemyTreeDraw_Flag	
+@Continue4:
+
 	;; run music code after drawing
 	jsr sound_play_frame
+	
+	JSR UpdateController
 	
 	LDA #$00
 	STA draw_flags
@@ -77,12 +91,7 @@ DoDrawingDone:
 UpdateController:
 	
 	.include "game/controls.asm"
-	.include "game/player_action.asm"
-	LDA PlayerTreeDraw_Flag
-	BNE @Continue
-	JSR Update_Player_Score
-	INC PlayerTreeDraw_Flag
-@Continue:
+	;; .include "game/player_action.asm"
 	LDA buttons1
 	STA prev_button
 	LDA #$01

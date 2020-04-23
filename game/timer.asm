@@ -11,6 +11,7 @@ Update_Timer_Ones:
 	LDA Timer_Temp_Ones_Y
 	TAY
 FirstTime:
+	BIT $2002
 	LDA Timer_Ones_Top_Point+1
 	STA $2006
 	LDA Timer_Ones_Top_Point+0
@@ -18,10 +19,11 @@ FirstTime:
 	LDA timer_ones_buffer_top, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 
-	LDA $2002
+	BIT $2002
 	LDA Timer_Ones_Bottom_Point+1
 	STA $2006
 	LDA Timer_Ones_Bottom_Point+0
@@ -29,6 +31,7 @@ FirstTime:
 	LDA timer_ones_buffer_bottom, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	TYA
@@ -57,7 +60,8 @@ Update_Ones_Reset:
 Update_Timer_Tens:
 	LDA Timer_Temp_Tens_Y
 	TAY
-	
+
+	BIT $2002
 	LDA Timer_Tens_Top_Point+1
 	STA $2006
 	LDA Timer_Tens_Top_Point+0 
@@ -66,10 +70,11 @@ Update_Timer_Tens:
 	STA $2007
 
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 
-	LDA $2002
+	BIT $2002
 	LDA Timer_Tens_Bottom_Point+1
 	STA $2006
 	LDA Timer_Tens_Bottom_Point+0
@@ -77,6 +82,7 @@ Update_Timer_Tens:
 	LDA timer_tens_buffer_bottom, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	TYA
@@ -96,6 +102,8 @@ Update_Timer_Tens:
 	CMP #$B0	;zero in buffer
 	BNE @Continue
 	INC Timer_Out_Flag
+	lda #$00
+	jsr sound_load
 	LDA #$04
 	jsr sound_load
 @Continue:

@@ -10,6 +10,7 @@ Update_Player_Ones:
 	LDA Score_Temp_Ones_Player
 	TAY
 @FirstTime:
+	lda $2002
 	LDA Score_Ones_Player_Point+1
 	STA $2006
 	LDA Score_Ones_Player_Point+0
@@ -17,6 +18,7 @@ Update_Player_Ones:
 	LDA score_ones_buffer_player, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	INY
@@ -43,6 +45,7 @@ Update_Player_Tens:
 	LDA Score_Temp_Tens_Player
 	TAY
 @FirstTime:
+	lda $2002
 	LDA Score_Tens_Player_Point+1
 	STA $2006
 	LDA Score_Tens_Player_Point+0
@@ -50,6 +53,7 @@ Update_Player_Tens:
 	LDA score_tens_buffer_player, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	INY
@@ -68,6 +72,8 @@ Update_Player_Tens:
 	RTS
 Update_Player_Hund:
 	INC Score_P_Hund_Flag
+	DEC Score_P_Tens_First_Flag
+	lda $2002
 	LDA Score_Hund_Player_Point+1
 	STA $2006
 	LDA Score_Hund_Player_Point+0
@@ -75,6 +81,7 @@ Update_Player_Hund:
 	LDA #$91
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	
@@ -82,7 +89,7 @@ Update_Player_Hund:
 
 Update_Enemy_Score:
 
-Update_Enemy_Ones:	
+Update_Enemy_Ones:
 	LDA Score_E_Ones_Flag
 	BNE @Continue
 	LDY #$00
@@ -100,6 +107,7 @@ Update_Enemy_Ones:
 	LDA score_ones_buffer_en, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	INY
@@ -134,6 +142,7 @@ Update_Enemy_Tens:
 	LDA score_tens_buffer_en, y
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	INY
@@ -160,6 +169,7 @@ Update_Enemy_Hund:
 	LDA #$91
 	STA $2007
 	LDA #$00
+	STA $2002
 	STA $2005
 	STA $2005
 	RTS

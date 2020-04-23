@@ -1,10 +1,15 @@
 GameEngineRunning:
-	DEC UpdateTimer_Flag
+	;; inc game_running_flag
+	lda #$02
+	jsr sound_load
+	dec UpdateTimer_Flag
 Forever:
 	inc sleeping
 @loop:
 	lda sleeping
 	bne @loop
+
+	jsr PlayerPunch
 	
 	LDA Timer_Out_Flag
 	BEQ @Continue3
@@ -16,17 +21,11 @@ Forever:
 	LDA #$D0
 	STA Timer
 @Continue:
-
 	DEC EnCounter
 	BNE Forever
 	LDA #$02
 	STA EnCounter
 	JSR Enemy_Movement_Table
-	LDA EnemyTreeDraw_Flag
-	BNE @Continue2
-	JSR Update_Enemy_Score
-	INC EnemyTreeDraw_Flag
-	
 @Continue2:
 	LDA #$16
 	STA playerax_u+1
@@ -39,7 +38,7 @@ Forever:
 	.include "game/timer.asm"
 	.include "game/score.asm"
 	.include "game/timeup.asm"
-
+	.include "game/player_action.asm"
 TimeUp:
 	LDA #%00000010
 	STA STATE
