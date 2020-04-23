@@ -42,25 +42,32 @@ Forever:
 TimeUp:
 	LDA #%00000010
 	STA STATE
-	JSR LoadTimeUpScreen
+	;; JSR LoadTimeUpScreen
+	inc Draw_TimerUp_Flag
+@Wait:
 	LDA FrameCounter1
 	CMP #$80
-	BNE TimeUp
+	BNE @Wait
 	LDA PlayerTreeCount
 	CMP EnemyTreeCount
 	BEQ @ScoreTie
+	LDA PlayerTreeCount
 	CMP EnemyTreeCount
 	BCC @AliensWin
-	JSR LoadHumansWin
+	;; JSR LoadHumansWin
+	inc Draw_HumansWin_Flag
 	JMP @Continue
 @AliensWin:
-	JSR LoadAliensWin
+	;; JSR LoadAliensWin
+	inc Draw_AliensWin_Flag
 	JMP @Continue
 @ScoreTie:
-	JSR LoadScoreTie
+	;; JSR LoadScoreTie
+	inc Draw_Tie_Flag
 @Continue:
 	LDA FrameCounter1
 	CMP #$01
+	;; cmp #$40
 	BNE @Continue
 	LDA #$00
 	STA $2001
