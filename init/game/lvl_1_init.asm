@@ -112,6 +112,16 @@
 	sta ax_x_temp
 	sta ax_y_temp
 	sta p_chopped_tree_flag
+	sta Timer_Out_Draw_Flag
+	sta Draw_AliensWin_Flag
+	sta Draw_HumansWin_Flag
+	sta Draw_Tie_Flag	
+	sta Draw_TimerUp_Flag
+	sta Draw_PlayerDeath_Flag
+	sta Timer_Set_Flag
+	sta Human_Set_Flag
+	sta Alien_Set_Flag
+	sta Tie_Set_Flag
 	STA SQUARE_1
 	STA MUSIC_SQ1
 
