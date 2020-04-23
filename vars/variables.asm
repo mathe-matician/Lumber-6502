@@ -255,193 +255,39 @@ Up_Flag			= $BC
 TopWall_Flag		= $BD
 sleeping		= $BE
 dbuffer_index		= $BF
-;----------------------------------------
-; Zero page SE variables
-;----------------------------------------
+
 se_ptr1			= $C0
 	;; 		= $C1
 sound_ptr		= $C2
 	;; 		= $C3
 current_song		= $C4
-SQUARE_1		= $C5
-SQUARE_2		= $C6
-TRIANGLE		= $C7
-NOISE			= $C8
-
-MUSIC_SQ1		= $C9
-MUSIC_SQ2		= $CA
-MUSIC_TRI		= $CB
-MUSIC_NOI		= $CC
-SFX_1			= $CD
-SFX_2			= $CE
-	
-;-----------------------------------------
-; Audio - Note Variables
-;-----------------------------------------
+startup_flag		= $C5
+song_flag		= $C6
+ax_x_temp		= $C7
+ax_y_temp		= $C8
+p_chopped_tree_flag	= $C9
+s_y			= $CA	
 	.enum $0300
-;; A1			= $0300
-;; As1			= $0301
-;; Bb1			= $0301
-;; B1			= $0302
-
-;; C2			= $0303
-;; Db2			= $0304
-;; D2			= $0305
-;; Eb2			= $0306
-;; E2			= $0307
-;; F2			= $0308
-;; Gb2			= $0309
-;; G2			= $030A
-;; A2			= $030B
-;; Ab2			= $030C
-;; A2			= $030D
-;; Bb2			= $030E
+sound_disable_flag	.dsb 1
+sound_temp1		.dsb 1
+sound_temp2		.dsb 1
+sound_sq1_old		.dsb 1
+sound_sq2_old		.dsb 1
+soft_apu_ports		.dsb 16
 	
-;; B2			= $030F
-;; C3			= $0310
-;; Db3			= $0311
-;; D3			= $0312
-;; Eb3			= $0313
-;; E3			= $0314
-;; F3			= $0315
-;; Gb3			= $0316
-;; G3			= $0317
-;; A3			= $0318
-;; Ab3			= $0319
-;; A3			= $031A
-	
-;; Bb3			= $031B
-;; B3			= $031C
-;; C4			= $031D	;middle C
-;; Db4			= $031E
-;; D4			= $031F
-;; Eb4			= $0320
-;; E4			= $0321
-;; F4			= $0322
-;; Gb4			= $0323
-;; G4			= $0324
-;; A4			= $0325
-;; Ab4			= $0326
-	
-;; A4			= $0327
-;; Bb4			= $0328
-;; B4			= $0329
-;; Ds5 			= $032a
-;; Eb5 			= $032a
-;; E5 			= $032b
-;; F5 			= $032c
-;; Fs5 			= $032d
-;; Gb5 			= $032d
-;; G5 			= $032e
-;; Gs5 			= $032f
-;; Ab5 			= $032f
-;; A5 			= $0330
-;; As5 			= $0331
-;; Bb5 			= $0331
-;; B5 			= $0332
-
-;; C6 			= $0333
-;; Cs6 			= $0334
-;; Db6 			= $0334
-;; D6 			= $0335
-;; Ds6 			= $0336
-;; Eb6 			= $0336
-;; E6 			= $0337
-;; F6 			= $0338
-;; Fs6 			= $0339
-;; Gb6 			= $0339
-;; G6 			= $033a
-;; Gs6 			= $033b
-;; Ab6 			= $033b
-;; A6 			= $033c
-;; As6 			= $033d
-;; Bb6 			= $033d
-;; B6 			= $033e
-
-;; C7 			= $033f
-;; Cs7 			= $0340
-;; Db7 			= $0340
-;; D7 			= $0341
-;; Ds7 			= $0342
-;; Eb7 			= $0342
-;; E7 			= $0343
-;; F7 			= $0344
-;; Fs7 			= $0345
-;; Gb7 			= $0345
-;; G7 			= $0346
-;; Gs7 			= $0347
-;; Ab7 			= $0347
-;; A7 			= $0348
-;; As7 			= $0349
-;; Bb7 			= $0349
-;; B7 			= $034a
-
-;; C8 			= $034b
-;; Cs8 			= $034c
-;; Db8 			= $034c
-;; D8 			= $034d
-;; Ds8 			= $034e
-;; Eb8 			= $034e
-;; E8 			= $034f
-;; F8 			= $0350
-;; Fs8 			= $0351
-;; Gb8 			= $0351
-;; G8 			= $0352
-;; Gs8 			= $0353
-;; Ab8 			= $0353
-;; A8 			= $0354
-;; As8 			= $0355
-;; Bb8 			= $0355
-;; B8 			= $0356
-
-;; C9 			= $0357
-;; Cs9 			= $0358
-;; Db9 			= $0358
-;; D9 			= $0359
-;; Ds9 			= $035a
-;; Eb9 			= $035a
-;; E9 			= $035b
-;; F9 			= $035c
-;; Fs9 			= $035d
-;; Gb9 			= $035d
-;; rest			= $035e	
-;; sound_disable_flag	.dsb 1
-;; sound_temp1		.dsb 1
-;; sound_temp2		.dsb 1
-;; sound_sq1_old		.dsb 1
-;; sound_sq2_old		.dsb 1
-;; soft_apu_ports		.dsb 16
-	
-;; stream_curr_sound	.dsb 6
-;; stream_status		.dsb 6
-;; stream_channel		.dsb 6
-;; stream_ptr_LO		.dsb 6
-;; stream_ptr_HI		.dsb 6
-;; stream_vol_duty		.dsb 6
-;; stream_note_LO		.dsb 6
-;; stream_note_HI		.dsb 6
-;; stream_tempo		.dsb 6
-;; stream_ticker_total	.dsb 6
-;; stream_note_length_counter .dsb 6
-;; stream_note_length	.dsb 6
+stream_curr_sound	.dsb 6
+stream_status		.dsb 6
+stream_channel		.dsb 6
+stream_ptr_LO		.dsb 6
+stream_ptr_HI		.dsb 6
+stream_vol_duty		.dsb 6
+stream_note_LO		.dsb 6
+stream_note_HI		.dsb 6
+stream_tempo		.dsb 6
+stream_ticker_total	.dsb 6
+stream_note_length_counter .dsb 6
+stream_note_length	.dsb 6
 	.ende
-	
-;-------------------------------------
-; Scoring Variable
-;-------------------------------------
-;; 	.enum $0400
-;; zero_tile		= $0400
-;; one_tile		= $0401	
-;; two_tile		= $0402
-;; three_tile		= $0403
-;; four_tile		= $0404
-;; five_tile		= $0405
-;; six_tile		= $0406
-;; seven_tile		= $0407
-;; eight_tile		= $0408
-;; nine_tile		= $0409
-;; 	.ende
-	
    .enum $0000
 
 gamestate  		.dsb 1
